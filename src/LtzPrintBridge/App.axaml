@@ -1,0 +1,50 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:LtzPrintBridge"
+             x:Class="LtzPrintBridge.App" RequestedThemeVariant="Default">
+  <Application.Styles>
+    <FluentTheme />
+  </Application.Styles>
+  <Application.Resources>
+    <ResourceDictionary>
+    <Color x:Key="SystemAccentColor">#0B7A75</Color>
+    <Color x:Key="SystemAccentColorLight1">#1B9C95</Color>
+    <Color x:Key="SystemAccentColorLight2">#2FB5AD</Color>
+    <Color x:Key="SystemAccentColorDark1">#096560</Color>
+    <Color x:Key="SystemAccentColorDark2">#07514D</Color>
+    <ResourceDictionary.ThemeDictionaries>
+      <ResourceDictionary x:Key="Light">
+        <SolidColorBrush x:Key="Ink">#16202A</SolidColorBrush>
+        <SolidColorBrush x:Key="Muted">#5D6C78</SolidColorBrush>
+        <SolidColorBrush x:Key="Line">#D9E0E3</SolidColorBrush>
+        <SolidColorBrush x:Key="Win">#F4F7F7</SolidColorBrush>
+        <SolidColorBrush x:Key="Panel">#FFFFFF</SolidColorBrush>
+        <SolidColorBrush x:Key="Chip">#F4F7F7</SolidColorBrush>
+        <SolidColorBrush x:Key="SelectedCard">#EEF8F7</SolidColorBrush>
+        <SolidColorBrush x:Key="Accent">#0B7A75</SolidColorBrush>
+        <SolidColorBrush x:Key="AccentText">#0B7A75</SolidColorBrush>
+        <SolidColorBrush x:Key="AccentSoft">#D7EFEC</SolidColorBrush>
+        <SolidColorBrush x:Key="Backdrop">#E4EAEC</SolidColorBrush>
+        <SolidColorBrush x:Key="Sidebar">#16202A</SolidColorBrush>
+      </ResourceDictionary>
+      <ResourceDictionary x:Key="Dark">
+        <SolidColorBrush x:Key="Ink">#E6EDF0</SolidColorBrush>
+        <SolidColorBrush x:Key="Muted">#93A4B1</SolidColorBrush>
+        <SolidColorBrush x:Key="Line">#2B3A46</SolidColorBrush>
+        <SolidColorBrush x:Key="Win">#0F171E</SolidColorBrush>
+        <SolidColorBrush x:Key="Panel">#17222C</SolidColorBrush>
+        <SolidColorBrush x:Key="Chip">#1E2C37</SolidColorBrush>
+        <SolidColorBrush x:Key="SelectedCard">#14302F</SolidColorBrush>
+        <SolidColorBrush x:Key="Accent">#14A39B</SolidColorBrush>
+        <SolidColorBrush x:Key="AccentText">#5EEAD4</SolidColorBrush>
+        <SolidColorBrush x:Key="AccentSoft">#12403E</SolidColorBrush>
+        <SolidColorBrush x:Key="Backdrop">#0B1218</SolidColorBrush>
+        <SolidColorBrush x:Key="Sidebar">#0B1218</SolidColorBrush>
+      </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+    <local:LanguageNameConverter x:Key="LangName"/>
+    <local:LevelBrushConverter x:Key="LevelBg" Foreground="False"/>
+    <local:LevelBrushConverter x:Key="LevelFg" Foreground="True"/>
+    </ResourceDictionary>
+  </Application.Resources>
+</Application>

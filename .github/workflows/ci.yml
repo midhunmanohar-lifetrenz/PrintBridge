@@ -1,0 +1,30 @@
+name: ci
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '10.0.x' }
+      - name: Test (unit, bridge, security, real Windows spooler)
+        run: dotnet test tests/LtzPrintBridge.Tests --logger "trx;LogFileName=results.trx"
+      - name: Publish EXE
+        run: dotnet publish src/LtzPrintBridge -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=none -o dist
+      - name: Installer round trip (install, check, uninstall)
+        shell: pwsh
+        run: |
+          $env:LTZ_INSTALL_DIR = "$env:RUNNER_TEMP\PB"
+          Start-Process dist\PrintBridge.exe -ArgumentList '--install','--silent' -Wait
+          if (!(Test-Path "$env:LTZ_INSTALL_DIR\PrintBridge.exe")) { throw 'exe not installed' }
+          if (!(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\PrintBridge')) { throw 'no uninstall entry' }
+          if (!(Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\PrintBridge.lnk")) { throw 'no start menu shortcut' }
+          Start-Process "$env:LTZ_INSTALL_DIR\PrintBridge.exe" -ArgumentList '--uninstall','--silent' -Wait
+          Start-Sleep -Seconds 6
+          if (Test-Path "$env:LTZ_INSTALL_DIR\PrintBridge.exe") { throw 'exe not removed' }
+          if (Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\PrintBridge') { throw 'uninstall entry left behind' }
+      - uses: actions/upload-artifact@v4
+        with: { name: PrintBridge-win-x64, path: dist/PrintBridge.exe }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: test-results, path: tests/LtzPrintBridge.Tests/TestResults/results.trx }

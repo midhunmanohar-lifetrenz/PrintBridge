@@ -1,0 +1,514 @@
+verdict	vendor	model	queue	driver	native	guessed	confidence
+correct	Zebra	ZD220	ZDesigner ZD220-203dpi ZPL	Zebra ZD220 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD230	ZDesigner ZD230-203dpi ZPL	Zebra ZD230 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD410	ZDesigner ZD410-203dpi ZPL	Zebra ZD410 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD410	ZDesigner ZD410-300dpi ZPL	Zebra ZD410 (300 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD411	ZDesigner ZD411-203dpi ZPL	Zebra ZD411 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD411	ZDesigner ZD411-300dpi ZPL	Zebra ZD411 (300 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD420	ZDesigner ZD420-203dpi ZPL	Zebra ZD420 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD420	ZDesigner ZD420-300dpi ZPL	Zebra ZD420 (300 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD421	ZDesigner ZD421-203dpi ZPL	Zebra ZD421 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD421	ZDesigner ZD421-300dpi ZPL	Zebra ZD421 (300 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD611	ZDesigner ZD611-203dpi ZPL	Zebra ZD611 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD611	ZDesigner ZD611-300dpi ZPL	Zebra ZD611 (300 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD620	ZDesigner ZD620-203dpi ZPL	Zebra ZD620 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD620	ZDesigner ZD620-300dpi ZPL	Zebra ZD620 (300 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD621	ZDesigner ZD621-203dpi ZPL	Zebra ZD621 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZD621	ZDesigner ZD621-300dpi ZPL	Zebra ZD621 (300 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZT111	ZDesigner ZT111-203dpi ZPL	Zebra ZT111 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZT231	ZDesigner ZT231-203dpi ZPL	Zebra ZT231 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZT231	ZDesigner ZT231-300dpi ZPL	Zebra ZT231 (300 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZT211	ZDesigner ZT211-203dpi ZPL	Zebra ZT211 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZT411	ZDesigner ZT411-203dpi ZPL	Zebra ZT411 (203 dpi)	ZPL	Zpl	medium
+correct	Zebra	ZT411	ZDesigner ZT411-300dpi ZPL	Zebra ZT411 (300 dpi)	ZPL	Zpl	medium
+correct	Zebra	ZT411	ZDesigner ZT411-600dpi ZPL	Zebra ZT411 (600 dpi)	ZPL	Zpl	medium
+correct	Zebra	ZT421	ZDesigner ZT421-203dpi ZPL	Zebra ZT421 (203 dpi)	ZPL	Zpl	medium
+correct	Zebra	ZT421	ZDesigner ZT421-300dpi ZPL	Zebra ZT421 (300 dpi)	ZPL	Zpl	medium
+correct	Zebra	ZT510	ZDesigner ZT510-203dpi ZPL	Zebra ZT510 (203 dpi)	ZPL	Zpl	medium
+correct	Zebra	ZT610	ZDesigner ZT610-203dpi ZPL	Zebra ZT610 (203 dpi)	ZPL	Zpl	medium
+correct	Zebra	ZT610	ZDesigner ZT610-300dpi ZPL	Zebra ZT610 (300 dpi)	ZPL	Zpl	medium
+correct	Zebra	ZT410	ZDesigner ZT410-203dpi ZPL	Zebra ZT410 (203 dpi)	ZPL	Zpl	medium
+correct	Zebra	ZT230	ZDesigner ZT230-203dpi ZPL	Zebra ZT230 (203 dpi)	ZPL	Zpl	medium
+correct	Zebra	GK420d	ZDesigner GK420d	Zebra GK420d - ZPL	ZPL	Zpl	high
+correct	Zebra	GK420t	ZDesigner GK420t	Zebra GK420t - ZPL	ZPL	Zpl	high
+correct	Zebra	GX420d	ZDesigner GX420d	Zebra GX420d - ZPL	ZPL	Zpl	high
+correct	Zebra	GX420t	ZDesigner GX420t	Zebra GX420t - ZPL	ZPL	Zpl	high
+correct	Zebra	GX430t	ZDesigner GX430t	Zebra GX430t - ZPL	ZPL	Zpl	high
+correct	Zebra	GC420d	ZDesigner GC420d	Zebra GC420d - ZPL	ZPL	Zpl	high
+correct	Zebra	GC420t	ZDesigner GC420t	Zebra GC420t - ZPL	ZPL	Zpl	high
+wrong	Zebra	LP 2844	ZDesigner LP 2844	Zebra LP2844	EPL	Zpl	high
+wrong	Zebra	TLP 2844	ZDesigner TLP 2844	Zebra TLP2844	EPL	Zpl	high
+correct	Zebra	LP 2844-Z	ZDesigner LP 2844-Z	Zebra LP2844-Z	ZPL	Zpl	high
+correct	Zebra	TLP 2844-Z	ZDesigner TLP 2844-Z	Zebra TLP2844-Z	ZPL	Zpl	high
+correct	Zebra	ZP 450	ZDesigner ZP 450-200dpi	Zebra ZP 450 CTP	ZPL	Zpl	low
+correct	Zebra	GT800	ZDesigner GT800 (ZPL)	Zebra GT800 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	ZM400	ZDesigner ZM400 200 dpi (ZPL)	Zebra ZM400 (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	S4M	ZDesigner S4M-203dpi ZPL	Zebra S4M (203 dpi) - ZPL	ZPL	Zpl	medium
+correct	Zebra	105SLPlus	ZDesigner 105SLPlus-203dpi ZPL	Zebra 105SL Plus (203 dpi)	ZPL	Zpl	medium
+correct	Zebra	110Xi4	ZDesigner 110Xi4 203 dpi	Zebra 110Xi4 (203 dpi)	ZPL	Zpl	low
+correct	Zebra	ZE511	ZDesigner ZE511 RH-203dpi ZPL	Zebra ZE511 RH (203 dpi)	ZPL	Zpl	low
+correct	Zebra	ZE521	ZDesigner ZE521 RH-203dpi ZPL	Zebra ZE521 RH (203 dpi)	ZPL	Zpl	low
+correct	Zebra	ZE500-4	ZDesigner ZE500-4 RH-203dpi ZPL	Zebra ZE500-4 RH (203 dpi)	ZPL	Zpl	low
+wrong	Zebra	ZQ310	ZDesigner ZQ310 (CPCL)	Zebra ZQ310 - CPCL	CPCL	Zpl	medium
+wrong	Zebra	ZQ320	ZDesigner ZQ320 (CPCL)	Zebra ZQ320 - CPCL	CPCL	Zpl	medium
+correct	Zebra	ZQ510	ZDesigner ZQ510 (ZPL)	Zebra ZQ510 -ZPL	ZPL	Zpl	medium
+correct	Zebra	ZQ511	ZDesigner ZQ511 (ZPL)	Zebra ZQ511 -ZPL	ZPL	Zpl	medium
+correct	Zebra	ZQ520	ZDesigner ZQ520 (ZPL)	Zebra ZQ520 -ZPL	ZPL	Zpl	medium
+correct	Zebra	ZQ521	ZDesigner ZQ521 (ZPL)	Zebra ZQ521 -ZPL	ZPL	Zpl	medium
+correct	Zebra	ZQ610	ZDesigner ZQ610 (ZPL)	Zebra ZQ610 -ZPL	ZPL	Zpl	medium
+correct	Zebra	ZQ620	ZDesigner ZQ620 (ZPL)	Zebra ZQ620 -ZPL	ZPL	Zpl	medium
+correct	Zebra	ZQ630	ZDesigner ZQ630 (ZPL)	Zebra ZQ630 -ZPL	ZPL	Zpl	medium
+wrong	Zebra	QLn 220	ZDesigner QLn220 (CPCL)	Zebra QLn 220 - CPCL	CPCL	Zpl	medium
+wrong	Zebra	QLn 320	ZDesigner QLn320 (CPCL)	Zebra QLn 320 - CPCL	CPCL	Zpl	medium
+wrong	Zebra	QLn 420	ZDesigner QLn420 (CPCL)	Zebra QLn 420 - CPCL	CPCL	Zpl	medium
+correct	TSC	TE200	TSC TE200	TSC TE200	TSPL	Tspl	high
+correct	TSC	TE210	TSC TE210	TSC TE210	TSPL	Tspl	high
+correct	TSC	TE300	TSC TE300	TSC TE300	TSPL	Tspl	high
+correct	TSC	TE310	TSC TE310	TSC TE310	TSPL	Tspl	high
+correct	TSC	TE244	TSC TE244	TSC TE244	TSPL	Tspl	high
+correct	TSC	TE344	TSC TE344	TSC TE344	TSPL	Tspl	high
+correct	TSC	TTP-244 Pro	TSC TTP-244 Pro	TSC TTP-244 Pro	TSPL	Tspl	high
+correct	TSC	TTP-244 Plus	TSC TTP-244 Plus	TSC TTP-244 Plus	TSPL	Tspl	high
+correct	TSC	TTP-244	TSC TTP-244	TSC TTP-244	TSPL	Tspl	high
+correct	TSC	TTP-244CE	TSC TTP-244CE	TSC TTP-244CE	TSPL	Tspl	high
+correct	TSC	TTP-247	TSC TTP-247	TSC TTP-247	TSPL	Tspl	high
+correct	TSC	TTP-345	TSC TTP-345	TSC TTP-345	TSPL	Tspl	high
+correct	TSC	TTP-225	TSC TTP-225	TSC TTP-225	TSPL	Tspl	high
+correct	TSC	TDP-225	TSC TDP-225	TSC TDP-225	TSPL	Tspl	high
+correct	TSC	TDP-247	TSC TDP-247	TSC TDP-247	TSPL	Tspl	high
+correct	TSC	DA200	TSC DA200	TSC DA200	TSPL	Tspl	high
+correct	TSC	DA210	TSC DA210	TSC DA210	TSPL	Tspl	high
+correct	TSC	DA220	TSC DA220	TSC DA220	TSPL	Tspl	high
+correct	TSC	DA300	TSC DA300	TSC DA300	TSPL	Tspl	high
+correct	TSC	DA310	TSC DA310	TSC DA310	TSPL	Tspl	high
+correct	TSC	TC200	TSC TC200	TSC TC200	TSPL	Tspl	high
+correct	TSC	TC210	TSC TC210	TSC TC210	TSPL	Tspl	high
+correct	TSC	TA210	TSC TA210	TSC TA210	TSPL	Tspl	high
+correct	TSC	TX200	TSC TX200	TSC TX200	TSPL	Tspl	high
+correct	TSC	TX210	TSC TX210	TSC TX210	TSPL	Tspl	high
+correct	TSC	TX300	TSC TX300	TSC TX300	TSPL	Tspl	high
+correct	TSC	TX310	TSC TX310	TSC TX310	TSPL	Tspl	high
+correct	TSC	TX600	TSC TX600	TSC TX600	TSPL	Tspl	high
+correct	TSC	TX610	TSC TX610	TSC TX610	TSPL	Tspl	high
+correct	TSC	ML240	TSC ML240	TSC ML240	TSPL	Tspl	high
+correct	TSC	ML340	TSC ML340	TSC ML340	TSPL	Tspl	high
+correct	TSC	ML240P	TSC ML240P	TSC ML240P	TSPL	Tspl	high
+correct	TSC	MB240	TSC MB240	TSC MB240	TSPL	Tspl	high
+correct	TSC	MB240T	TSC MB240T	TSC MB240T	TSPL	Tspl	high
+correct	TSC	MB340T	TSC MB340T	TSC MB340T	TSPL	Tspl	high
+correct	TSC	MH241	TSC MH241	TSC MH241	TSPL	Tspl	high
+correct	TSC	MH341	TSC MH341	TSC MH341	TSPL	Tspl	high
+correct	TSC	MH261	TSC MH261	TSC MH261	TSPL	Tspl	high
+correct	TSC	Alpha-2R	TSC Alpha-2R	TSC Alpha-2R	TSPL	Tspl	medium
+correct	TSC	Alpha-3R	TSC Alpha-3R	TSC Alpha-3R	TSPL	Tspl	medium
+correct	TSC	Alpha-30L	TSC Alpha-30L	TSC Alpha-30L	TSPL	Tspl	medium
+correct	TSC	Alpha-40L	TSC Alpha-40L	TSC Alpha-40L	TSPL	Tspl	medium
+correct	TSC	Alpha-4L	TSC Alpha-4L	TSC Alpha-4L	TSPL	Tspl	medium
+correct	TSC	TH240 Series	TSC TH240 Series	TSC TH240 Series	TSPL	Tspl	high
+correct	TSC	DH220 Series	TSC DH220 Series	TSC DH220 Series	TSPL	Tspl	high
+correct	TVS-E	LP 46 Dlite	TVS-E LP 46 Dlite	SNBC TVSE LP46 Dlite BPLE	BPLE	Bple	medium
+correct	TVS-E	LP 46 Neo	TVS-E LP 46 NEO	SNBC TVSE LP 46 NEO BPLE	BPLE	Bple	medium
+correct	TVS-E	LP 45	TVS-E LP 45	TVSE LP45 BPLE	BPLE	Bple	medium
+correct	TVS-E	LP 46 Dlite Plus	TVS-E LP 46 Dlite Plus		BPLE	Bple	low
+wrong	TVS-E	LP 46 Lite	TVS-E LP 46 Lite		TSPL	Bple	medium
+wrong	TVS-E	LP 46 Plus	TVS-E LP 46 Plus		TSPL	Bple	medium
+wrong	TVS-E	LP 45 Lite	TVS-E LP 45 Lite		TSPL	Bple	low
+wrong(no such language in app)	TVS-E	LP 44	TVS-E LP 44		Other	Bple	low
+correct	TVS-E	Champ Shoppe	TVS CHAMP SHOPPE	TVS CHAMP SHOPPE BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-L42	SNBC BTP-L42	SNBC BTP-L42 BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-L42II	SNBC BTP-L42II	SNBC BTP-L42II BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-L520	SNBC BTP-L520	SNBC BTP-L520 BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-L540	SNBC BTP-L540	SNBC BTP-L540 BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-L540H	SNBC BTP-L540H	SNBC BTP-L540H BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-L548	SNBC BTP-L548	SNBC BTP-L548 BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-2200E	SNBC BTP-2200E	SNBC BTP-2200E BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-2300E	SNBC BTP-2300E	SNBC BTP-2300E BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-4200E	SNBC BTP-4200E	SNBC BTP-4200E BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-4300E	SNBC BTP-4300E	SNBC BTP-4300E BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-U100t	SNBC BTP-U100t	SNBC BTP-U100t BPLE	BPLE	Bple	medium
+correct	SNBC	BTP-V540	SNBC BTP-V540	SNBC BTP-V540 BPLE	BPLE	Bple	medium
+wrong(no such language in app)	Honeywell	PC42t	Honeywell PC42t (203 dpi) - DP	Honeywell PC42t (203 dpi) - DP	Fingerprint	Dpl	high
+wrong	Honeywell	PC42t	Honeywell PC42t (203 dpi) - ESim	Honeywell PC42t (203 dpi) - ESim	EPL	Dpl	high
+wrong(no such language in app)	Honeywell	PC42t Plus	Honeywell PC42t plus (203 dpi)	Honeywell PC42t plus (203 dpi)	Fingerprint	Dpl	medium
+wrong(no such language in app)	Honeywell	PC42d	Honeywell PC42d (203 dpi)	Honeywell PC42d (203 dpi)	Fingerprint	Dpl	medium
+wrong(no such language in app)	Honeywell	PC42E-T	Honeywell PC42E-T (203 dpi) - DP	Honeywell PC42E-T (203 dpi) - DP	Fingerprint	Dpl	high
+wrong(no such language in app)	Honeywell	PC42E-T	Honeywell PC42E-T (300 dpi) - DP	Honeywell PC42E-T (300 dpi) - DP	Fingerprint	Dpl	high
+wrong(no such language in app)	Honeywell	PC42E-D	Honeywell PC42E-D (203 dpi) - DP	Honeywell PC42E-D (203 dpi) - DP	Fingerprint	Dpl	high
+wrong(no such language in app)	Honeywell	PC42E-D	Honeywell PC42E-D (300 dpi) - DP	Honeywell PC42E-D (300 dpi) - DP	Fingerprint	Dpl	high
+wrong(no such language in app)	Honeywell	PC45t	Honeywell PC45t (203 dpi)	Honeywell PC45t (203 dpi)	Fingerprint	Dpl	medium
+wrong(no such language in app)	Honeywell	PC45d	Honeywell PC45d (203 dpi)	Honeywell PC45d (203 dpi)	Fingerprint	Dpl	medium
+wrong(no such language in app)	Honeywell	PM45	Honeywell PM45 (203 dpi)	Honeywell PM45 (203 dpi)	Fingerprint	Dpl	medium
+wrong(no such language in app)	Honeywell	PM45	Honeywell PM45 (300 dpi)	Honeywell PM45 (300 dpi)	Fingerprint	Dpl	medium
+wrong(no such language in app)	Honeywell	PM45	Honeywell PM45 (406 dpi)	Honeywell PM45 (406 dpi)	Fingerprint	Dpl	medium
+wrong(no such language in app)	Honeywell	PM45	Honeywell PM45 (600 dpi)	Honeywell PM45 (600 dpi)	Fingerprint	Dpl	medium
+wrong(no such language in app)	Honeywell	PM42	Honeywell PM42 (203 dpi) - DP	Honeywell PM42 (203 dpi) - DP	Fingerprint	Dpl	high
+wrong(no such language in app)	Honeywell	PX940A	Honeywell PX940A (203 dpi)	Honeywell PX940A (203 dpi)	Fingerprint	Dpl	medium
+wrong(no such language in app)	Honeywell	PX940V	Honeywell PX940V (203 dpi)	Honeywell PX940V (203 dpi)	Fingerprint	Dpl	medium
+wrong(no such language in app)	Honeywell	PD45	Honeywell PD45 (203 dpi)	Honeywell PD45 (203 dpi)	Fingerprint	Dpl	medium
+correct	Honeywell	RP4	Honeywell RP4	Honeywell RP4	DPL	Dpl	low
+unsupported-ok	Intermec	PC43t	Intermec PC43t (203 dpi) - DP	Intermec PC43t (203 dpi) - DP	Fingerprint	Auto	high
+unsupported-ok	Intermec	PC43d	Intermec PC43d (203 dpi) - DP	Intermec PC43d (203 dpi) - DP	Fingerprint	Auto	high
+unsupported-ok	Intermec	PC23d	Intermec PC23d (203 dpi) - DP	Intermec PC23d (203 dpi) - DP	Fingerprint	Auto	high
+unsupported-ok	Intermec	PC43t	Intermec PC43t (300 dpi) - DP	Intermec PC43t (300 dpi) - DP	Fingerprint	Auto	high
+not-recognised	Intermec	PC43t	Intermec PC43t (203 dpi) - ESim	Intermec PC43t (203 dpi) - ESim	EPL	Auto	high
+unsupported-ok	Intermec	PC43d	Intermec PC43d (203 dpi) - IPL	Intermec PC43d (203 dpi) - IPL	IPL	Auto	high
+unsupported-ok	Intermec	PM43	Intermec PM43 (203 dpi) - DP	Intermec PM43 (203 dpi) - DP	Fingerprint	Auto	high
+unsupported-ok	Intermec	PM43	Intermec PM43 (300 dpi) - DP	Intermec PM43 (300 dpi) - DP	Fingerprint	Auto	high
+unsupported-ok	Intermec	PM43	Intermec PM43 (406 dpi) - DP	Intermec PM43 (406 dpi) - DP	Fingerprint	Auto	high
+unsupported-ok	Intermec	PM43	Intermec PM43 (600 dpi) - DP	Intermec PM43 (600 dpi) - DP	Fingerprint	Auto	high
+unsupported-ok	Intermec	PM43	Intermec PM43 (203 dpi) - IPL	Intermec PM43 (203 dpi) - IPL	IPL	Auto	high
+unsupported-ok	Intermec	PM43c	Intermec PM43c (203 dpi) - DP	Intermec PM43c (203 dpi) - DP	Fingerprint	Auto	high
+unsupported-ok	Intermec	PD43	Intermec PD43 (203 dpi) - DP	Intermec PD43 (203 dpi) - DP	Fingerprint	Auto	high
+unsupported-ok	Intermec	EasyCoder PD42	EasyCoder PD42 (203 dpi) - DP	EasyCoder PD42 (203 dpi) - DP	Fingerprint	Auto	high
+unsupported-ok	Intermec	EasyCoder PX4i	EasyCoder PX4i (203 dpi) - DP	EasyCoder PX4i (203 dpi) - DP	Fingerprint	Auto	high
+unsupported-ok	Intermec	EasyCoder PM4i	EasyCoder PM4i (203 dpi) - IPL	EasyCoder PM4i (203 dpi) - IPL	IPL	Auto	high
+not-recognised	Intermec	EasyCoder PF8t	Intermec PF8t (203 dpi)	Intermec PF8t (203 dpi)	EPL	Auto	low
+not-recognised	Intermec	EasyCoder C4	EasyCoder C4 (203 dpi)	EasyCoder C4 (203 dpi)	EPL	Auto	medium
+unsupported-ok	Intermec	3400E	EasyCoder 3400E (203 dpi)	EasyCoder 3400E (203 dpi)	IPL	Auto	high
+correct	Datamax-O'Neil	E-4204B Mark III	Datamax-O'Neil E-4204B Mark III	Datamax-O'Neil E-4204B Mark III	DPL	Dpl	high
+correct	Datamax-O'Neil	E-4205A Mark III	Datamax-O'Neil E-4205A Mark III	Datamax-O'Neil E-4205A Mark III	DPL	Dpl	high
+correct	Datamax-O'Neil	E-4206P Mark III	Datamax-O'Neil E-4206P Mark III	Datamax-O'Neil E-4206P Mark III	DPL	Dpl	high
+correct	Datamax-O'Neil	E-4206L Mark III	Datamax-O'Neil E-4206L Mark III	Datamax-O'Neil E-4206L Mark III	DPL	Dpl	high
+correct	Datamax-O'Neil	E-4304B Mark III	Datamax-O'Neil E-4304B Mark III	Datamax-O'Neil E-4304B Mark III	DPL	Dpl	high
+correct	Datamax-O'Neil	E-4305A Mark III	Datamax-O'Neil E-4305A Mark III	Datamax-O'Neil E-4305A Mark III	DPL	Dpl	high
+correct	Datamax-O'Neil	E-4205e Mark II	Datamax-O'Neil E-4205e Mark II	Datamax-O'Neil E-4205e Mark II	DPL	Dpl	high
+correct	Datamax-O'Neil	E-4204	Datamax E-4204	Datamax E-4204	DPL	Dpl	high
+correct	Datamax-O'Neil	I-4212e MarkII	Datamax-O'Neil I-4212e MarkII	Datamax-O'Neil I-4212e MarkII	DPL	Dpl	high
+correct	Datamax-O'Neil	I-4310e MarkII	Datamax-O'Neil I-4310e MarkII	Datamax-O'Neil I-4310e MarkII	DPL	Dpl	high
+correct	Datamax-O'Neil	I-4606e MarkII	Datamax-O'Neil I-4606e MarkII	Datamax-O'Neil I-4606e MarkII	DPL	Dpl	high
+correct	Datamax-O'Neil	I-4208	Datamax I-4208	Datamax I-4208	DPL	Dpl	high
+correct	Datamax-O'Neil	I-4308	Datamax I-4308	Datamax I-4308	DPL	Dpl	high
+correct	Datamax-O'Neil	M-4206 Mark II	Datamax-O'Neil M-4206 Mark II	Datamax-O'Neil M-4206 Mark II	DPL	Dpl	high
+correct	Datamax-O'Neil	M-4210 Mark II	Datamax-O'Neil M-4210 Mark II	Datamax-O'Neil M-4210 Mark II	DPL	Dpl	high
+correct	Datamax-O'Neil	M-4308 Mark II	Datamax-O'Neil M-4308 Mark II	Datamax-O'Neil M-4308 Mark II	DPL	Dpl	high
+correct	Datamax-O'Neil	H-4212	Datamax-O'Neil H-4212	Datamax-O'Neil H-4212	DPL	Dpl	high
+correct	Datamax-O'Neil	H-4310	Datamax-O'Neil H-4310	Datamax-O'Neil H-4310	DPL	Dpl	high
+correct	Datamax-O'Neil	H-6210	Datamax-O'Neil H-6210	Datamax-O'Neil H-6210	DPL	Dpl	high
+correct	Datamax-O'Neil	RL4	Datamax-O'Neil RL4	Datamax-O'Neil RL4	DPL	Dpl	medium
+correct	Datamax-O'Neil	RL3	Datamax-O'Neil RL3	Datamax-O'Neil RL3	DPL	Dpl	medium
+unsupported-ok	SATO	CL4NX	SATO CL4NX (203 dpi)	SATO CL4NX (203 dpi)	SBPL	Auto	high
+unsupported-ok	SATO	CL4NX	SATO CL4NX (305 dpi)	SATO CL4NX (305 dpi)	SBPL	Auto	high
+unsupported-ok	SATO	CL4NX Plus	SATO CL4NX Plus (203 dpi)	SATO CL4NX Plus (203 dpi)	SBPL	Auto	high
+unsupported-ok	SATO	CL4NX Plus	SATO CL4NX Plus (305 dpi)	SATO CL4NX Plus (305 dpi)	SBPL	Auto	high
+unsupported-ok	SATO	CL6NX	SATO CL6NX (203 dpi)	SATO CL6NX (203 dpi)	SBPL	Auto	high
+unsupported-ok	SATO	CL6NX	SATO CL6NX (305 dpi)	SATO CL6NX (305 dpi)	SBPL	Auto	high
+unsupported-ok	SATO	CT4-LX	SATO CT4-LX (203 dpi)	SATO CT4-LX (203 dpi)	SBPL	Auto	high
+unsupported-ok	SATO	CT4-LX	SATO CT4-LX (305 dpi)	SATO CT4-LX (305 dpi)	SBPL	Auto	high
+unsupported-ok	SATO	CL4NX	SATO CL4NX (609 dpi)	SATO CL4NX (609 dpi)	SBPL	Auto	high
+correct	SATO	WS408	SATO WS408 SZPL	SATO WS408 SZPL	ZPL	Zpl	high
+not-recognised	SATO	WS408	SATO WS408 SEPL	SATO WS408 SEPL	EPL	Auto	high
+not-recognised	SATO	WS408	SATO WS408 SDPL	SATO WS408 SDPL	DPL	Auto	high
+correct	SATO	WS412	SATO WS412 SZPL	SATO WS412 SZPL	ZPL	Zpl	high
+not-recognised	SATO	WS412	SATO WS412 SEPL	SATO WS412 SEPL	EPL	Auto	high
+not-recognised	SATO	WS412	SATO WS412 SDPL	SATO WS412 SDPL	DPL	Auto	high
+correct	SATO	WS208	SATO WS208 SZPL	SATO WS208 SZPL	ZPL	Zpl	high
+not-recognised	SATO	WS208	SATO WS208 SEPL	SATO WS208 SEPL	EPL	Auto	high
+not-recognised	SATO	WS208	SATO WS208 SDPL	SATO WS208 SDPL	DPL	Auto	high
+correct	SATO	WS212	SATO WS212 SZPL	SATO WS212 SZPL	ZPL	Zpl	high
+not-recognised	SATO	WS212	SATO WS212 SEPL	SATO WS212 SEPL	EPL	Auto	high
+not-recognised	SATO	WS212	SATO WS212 SDPL	SATO WS212 SDPL	DPL	Auto	high
+unsupported-ok	SATO	WS408TT	SATO WS408TT	SATO WS408TT	SBPL	Auto	medium
+unsupported-ok	SATO	WS408DT	SATO WS408DT	SATO WS408DT	SBPL	Auto	medium
+unsupported-ok	SATO	CG208DT	SATO CG208DT	SATO CG208DT	SBPL	Auto	high
+unsupported-ok	SATO	CG208TT	SATO CG208TT	SATO CG208TT	SBPL	Auto	high
+unsupported-ok	SATO	CG212TT	SATO CG212TT	SATO CG212TT	SBPL	Auto	high
+unsupported-ok	SATO	CG408DT	SATO CG408DT	SATO CG408DT	SBPL	Auto	high
+unsupported-ok	SATO	CG408TT	SATO CG408TT	SATO CG408TT	SBPL	Auto	high
+unsupported-ok	SATO	CG412DT	SATO CG412DT	SATO CG412DT	SBPL	Auto	high
+unsupported-ok	SATO	CG412TT	SATO CG412TT	SATO CG412TT	SBPL	Auto	high
+unsupported-ok	SATO	CL408e	SATO CL408e	SATO CL408e	SBPL	Auto	high
+unsupported-ok	SATO	CL412e	SATO CL412e	SATO CL412e	SBPL	Auto	high
+unsupported-ok	SATO	GL408e	SATO GL408e	SATO GL408e	SBPL	Auto	high
+unsupported-ok	SATO	S84-ex	SATO S84-ex (203 dpi)	SATO S84-ex (203 dpi)	SBPL	Auto	high
+unsupported-ok	SATO	PW208NX	SATO PW208NX	SATO PW208NX	SBPL	Auto	high
+wrong(no such language in app)	Godex	G500	Godex G500	Godex G500	EZPL	Zpl	high
+wrong(no such language in app)	Godex	G530	Godex G530	Godex G530	EZPL	Zpl	high
+wrong(no such language in app)	Godex	G500+	Godex G500+	Godex G500+	EZPL	Zpl	high
+wrong(no such language in app)	Godex	G300	Godex G300	Godex G300	EZPL	Zpl	high
+wrong(no such language in app)	Godex	G330	Godex G330	Godex G330	EZPL	Zpl	high
+wrong(no such language in app)	Godex	RT200	Godex RT200	Godex RT200	EZPL	Zpl	high
+wrong(no such language in app)	Godex	RT230	Godex RT230	Godex RT230	EZPL	Zpl	high
+wrong(no such language in app)	Godex	RT200i	Godex RT200i	Godex RT200i	EZPL	Zpl	high
+wrong(no such language in app)	Godex	RT700	Godex RT700	Godex RT700	EZPL	Zpl	high
+wrong(no such language in app)	Godex	RT730	Godex RT730	Godex RT730	EZPL	Zpl	high
+wrong(no such language in app)	Godex	RT700i	Godex RT700i	Godex RT700i	EZPL	Zpl	high
+wrong(no such language in app)	Godex	RT700x	Godex RT700x	Godex RT700x	EZPL	Zpl	high
+wrong(no such language in app)	Godex	RT730i	Godex RT730i	Godex RT730i	EZPL	Zpl	high
+wrong(no such language in app)	Godex	EZ-1100 Plus	Godex EZ-1100 Plus	Godex EZ-1100 Plus	EZPL	Zpl	high
+wrong(no such language in app)	Godex	EZ-1200 Plus	Godex EZ-1200 Plus	Godex EZ-1200 Plus	EZPL	Zpl	high
+wrong(no such language in app)	Godex	EZ-1300 Plus	Godex EZ-1300 Plus	Godex EZ-1300 Plus	EZPL	Zpl	high
+wrong(no such language in app)	Godex	EZ120	Godex EZ120	Godex EZ120	EZPL	Zpl	high
+wrong(no such language in app)	Godex	ZX420	Godex ZX420	Godex ZX420	EZPL	Zpl	high
+wrong(no such language in app)	Godex	ZX430	Godex ZX430	Godex ZX430	EZPL	Zpl	high
+wrong(no such language in app)	Godex	ZX420i	Godex ZX420i	Godex ZX420i	EZPL	Zpl	high
+wrong(no such language in app)	Godex	ZX1200i	Godex ZX1200i	Godex ZX1200i	EZPL	Zpl	high
+wrong(no such language in app)	Godex	ZX1300i	Godex ZX1300i	Godex ZX1300i	EZPL	Zpl	high
+wrong(no such language in app)	Godex	DT2x	Godex DT2x	Godex DT2x	EZPL	Zpl	high
+wrong(no such language in app)	Godex	DT4x	Godex DT4x	Godex DT4x	EZPL	Zpl	high
+wrong(no such language in app)	Godex	GE300	Godex GE300	Godex GE300	EZPL	Zpl	high
+wrong(no such language in app)	Godex	GE330	Godex GE330	Godex GE330	EZPL	Zpl	high
+wrong(no such language in app)	Godex	EZ2250i	Godex EZ2250i	Godex EZ2250i	EZPL	Zpl	high
+wrong(no such language in app)	Godex	MX30	Godex MX30	Godex MX30	EZPL	Zpl	high
+correct	Godex	G500	Godex G500 GZPL	Godex G500 GZPL	ZPL	Zpl	high
+wrong	Godex	G500	Godex G500 GEPL	Godex G500 GEPL	EPL	Zpl	high
+wrong(no such language in app)	Godex	EZ-1100	Godex EZ-1100	Godex EZ-1100	EZPL	Zpl	high
+wrong	Argox	OS-214 plus	Argox OS-214 plus PPLA	Argox OS-214 plus PPLA	PPLA	Zpl	high
+wrong	Argox	OS-214 plus	Argox OS-214 plus PPLB	Argox OS-214 plus PPLB	PPLB	Zpl	high
+wrong	Argox	OS-214 plus series	Argox OS-214 plus series PPLA	Argox OS-214 plus series PPLA	PPLA	Zpl	high
+wrong	Argox	OS-214 plus series	Argox OS-214 plus series PPLB	Argox OS-214 plus series PPLB	PPLB	Zpl	high
+wrong	Argox	OS-214plus Pro	Argox OS-214plus Pro PPLA	Argox OS-214plus Pro PPLA	PPLA	Zpl	high
+wrong	Argox	OS-214plus Pro	Argox OS-214plus Pro PPLB	Argox OS-214plus Pro PPLB	PPLB	Zpl	high
+wrong	Argox	OS-2140	Argox OS-2140 PPLA	Argox OS-2140 PPLA	PPLA	Zpl	high
+wrong	Argox	OS-2140	Argox OS-2140 PPLB	Argox OS-2140 PPLB	PPLB	Zpl	high
+correct	Argox	OS-2140	Argox OS-2140 PPLZ	Argox OS-2140 PPLZ	PPLZ	Zpl	high
+wrong	Argox	OS-2140D	Argox OS-2140D PPLB	Argox OS-2140D PPLB	PPLB	Zpl	high
+wrong	Argox	OS-214EX	Argox OS-214EX PPLA	Argox OS-214EX PPLA	PPLA	Zpl	high
+wrong	Argox	OS-2130D	Argox OS-2130D PPLA	Argox OS-2130D PPLA	PPLA	Zpl	high
+wrong	Argox	CP-2140	Argox CP-2140 PPLA	Argox CP-2140 PPLA	PPLA	Zpl	high
+wrong	Argox	CP-2140	Argox CP-2140 PPLB	Argox CP-2140 PPLB	PPLB	Zpl	high
+correct	Argox	CP-2140	Argox CP-2140 PPLZ	Argox CP-2140 PPLZ	PPLZ	Zpl	high
+wrong	Argox	CP-2140EX	Argox CP-2140EX PPLA	Argox CP-2140EX PPLA	PPLA	Zpl	high
+wrong	Argox	CP-2140EX	Argox CP-2140EX PPLB	Argox CP-2140EX PPLB	PPLB	Zpl	high
+wrong	Argox	CP-2140M	Argox CP-2140M PPLA	Argox CP-2140M PPLA	PPLA	Zpl	high
+wrong	Argox	CP-3140	Argox CP-3140 PPLA	Argox CP-3140 PPLA	PPLA	Zpl	high
+wrong	Argox	CP-3140	Argox CP-3140 PPLB	Argox CP-3140 PPLB	PPLB	Zpl	high
+wrong	Argox	CP-3140L	Argox CP-3140L PPLA	Argox CP-3140L PPLA	PPLA	Zpl	high
+wrong	Argox	iX4-250	Argox iX4-250 PPLA	Argox iX4-250 PPLA	PPLA	Zpl	high
+wrong	Argox	iX4-250	Argox iX4-250 PPLB	Argox iX4-250 PPLB	PPLB	Zpl	high
+correct	Argox	iX4-250	Argox iX4-250 PPLZ	Argox iX4-250 PPLZ	PPLZ	Zpl	high
+wrong	Argox	iX4-350	Argox iX4-350 PPLA	Argox iX4-350 PPLA	PPLA	Zpl	high
+wrong	Argox	iX4-240	Argox iX4-240 PPLA	Argox iX4-240 PPLA	PPLA	Zpl	high
+wrong	Argox	X-2300	Argox X-2300 PPLA	Argox X-2300 PPLA	PPLA	Zpl	high
+wrong	Argox	X-2300	Argox X-2300 PPLB	Argox X-2300 PPLB	PPLB	Zpl	high
+wrong	Argox	X-3200	Argox X-3200 PPLA	Argox X-3200 PPLA	PPLA	Zpl	high
+wrong	Argox	O4-250	Argox O4-250 PPLA	Argox O4-250 PPLA	PPLA	Zpl	high
+wrong	Argox	D4-250	Argox D4-250 PPLA	Argox D4-250 PPLA	PPLA	Zpl	high
+wrong	Argox	A-2240	Argox A-2240 PPLA	Argox A-2240 PPLA	PPLA	Zpl	high
+wrong	Argox	ME-2140 Pro	Argox ME-2140 Pro PPLA	Argox ME-2140 Pro PPLA	PPLA	Zpl	high
+not-recognised	Citizen	CL-S521	Citizen CL-S521	Citizen CL-S521	DPL	Auto	medium
+not-recognised	Citizen	CL-S621	Citizen CL-S621	Citizen CL-S621	DPL	Auto	medium
+not-recognised	Citizen	CL-S631	Citizen CL-S631	Citizen CL-S631	DPL	Auto	medium
+not-recognised	Citizen	CL-S521II	Citizen CL-S521II	Citizen CL-S521II	DPL	Auto	medium
+not-recognised	Citizen	CL-S621II	Citizen CL-S621II	Citizen CL-S621II	DPL	Auto	medium
+not-recognised	Citizen	CL-S631II	Citizen CL-S631II	Citizen CL-S631II	DPL	Auto	medium
+not-recognised	Citizen	CL-S700	Citizen CL-S700	Citizen CL-S700	DPL	Auto	medium
+not-recognised	Citizen	CL-S703	Citizen CL-S703	Citizen CL-S703	DPL	Auto	medium
+not-recognised	Citizen	CL-S6621	Citizen CL-S6621	Citizen CL-S6621	DPL	Auto	medium
+not-recognised	Citizen	CL-E720	Citizen CL-E720	Citizen CL-E720	DPL	Auto	medium
+not-recognised	Citizen	CL-E730	Citizen CL-E730	Citizen CL-E730	DPL	Auto	medium
+not-recognised	Citizen	CL-E321	Citizen CL-E321	Citizen CL-E321	DPL	Auto	medium
+not-recognised	Citizen	CL-E331	Citizen CL-E331	Citizen CL-E331	DPL	Auto	medium
+not-recognised	Citizen	CL-E300	Citizen CL-E300	Citizen CL-E300	DPL	Auto	medium
+not-recognised	Citizen	CL-S400DT	Citizen CL-S400DT	Citizen CL-S400DT	DPL	Auto	medium
+not-recognised	Citizen	CLP-521	Citizen CLP-521	Citizen CLP-521	DPL	Auto	medium
+not-recognised	Citizen	CLP-621	Citizen CLP-621	Citizen CLP-621	DPL	Auto	medium
+not-recognised	Citizen	CLP-631	Citizen CLP-631	Citizen CLP-631	DPL	Auto	medium
+not-recognised	Citizen	CL-S521Z	Citizen CL-S521Z	Citizen CL-S521Z	ZPL	Auto	medium
+not-recognised	Citizen	CL-S621Z	Citizen CL-S621Z	Citizen CL-S621Z	ZPL	Auto	medium
+not-recognised	Citizen	CL-S631Z	Citizen CL-S631Z	Citizen CL-S631Z	ZPL	Auto	medium
+not-recognised	Citizen	CL-E720Z	Citizen CL-E720Z	Citizen CL-E720Z	ZPL	Auto	medium
+not-recognised	Citizen	CL-E321Z	Citizen CL-E321Z	Citizen CL-E321Z	ZPL	Auto	medium
+not-recognised	Citizen	CL-S621IIZ	Citizen CL-S621IIZ	Citizen CL-S621IIZ	ZPL	Auto	medium
+not-recognised	Citizen	CL-E321E	Citizen CL-E321E	Citizen CL-E321E	EPL	Auto	low
+correct	Brother	QL-800	Brother QL-800	Brother QL-800	Raster	Pdf	high
+correct	Brother	QL-810W	Brother QL-810W	Brother QL-810W	Raster	Pdf	high
+correct	Brother	QL-820NWB	Brother QL-820NWB	Brother QL-820NWB	Raster	Pdf	high
+correct	Brother	QL-1100	Brother QL-1100	Brother QL-1100	Raster	Pdf	high
+correct	Brother	QL-1110NWB	Brother QL-1110NWB	Brother QL-1110NWB	Raster	Pdf	high
+correct	Brother	QL-500	Brother QL-500	Brother QL-500	Raster	Pdf	high
+correct	Brother	QL-1060N	Brother QL-1060N	Brother QL-1060N	Raster	Pdf	high
+correct	Brother	PT-P700	Brother PT-P700	Brother PT-P700	Raster	Pdf	high
+correct	Brother	PT-P750W	Brother PT-P750W	Brother PT-P750W	Raster	Pdf	high
+correct	Brother	PT-P900W	Brother PT-P900W	Brother PT-P900W	Raster	Pdf	high
+correct	Brother	PT-P950NW	Brother PT-P950NW	Brother PT-P950NW	Raster	Pdf	high
+correct	Brother	TD-4410D	Brother TD-4410D	Brother TD-4410D	Raster	Pdf	medium
+correct	Brother	TD-4420DN	Brother TD-4420DN	Brother TD-4420DN	Raster	Pdf	medium
+correct	Brother	TD-4520DN	Brother TD-4520DN	Brother TD-4520DN	Raster	Pdf	medium
+correct	Brother	TD-4550DNWB	Brother TD-4550DNWB	Brother TD-4550DNWB	Raster	Pdf	medium
+wrong	Brother	TD-4420TN	Brother TD-4420TN	Brother TD-4420TN	TSPL	Pdf	medium
+wrong	Brother	TD-4520TN	Brother TD-4520TN	Brother TD-4520TN	TSPL	Pdf	medium
+wrong	Brother	TD-4650TNWB	Brother TD-4650TNWB	Brother TD-4650TNWB	TSPL	Pdf	medium
+wrong	Brother	TD-4750TNWB	Brother TD-4750TNWB	Brother TD-4750TNWB	TSPL	Pdf	medium
+not-recognised	DYMO	LabelWriter 450	DYMO LabelWriter 450	DYMO LabelWriter 450	Raster	Auto	medium
+not-recognised	DYMO	LabelWriter 450 Turbo	DYMO LabelWriter 450 Turbo	DYMO LabelWriter 450 Turbo	Raster	Auto	medium
+not-recognised	DYMO	LabelWriter 450 Twin Turbo	DYMO LabelWriter 450 Twin Turbo	DYMO LabelWriter 450 Twin Turbo	Raster	Auto	medium
+not-recognised	DYMO	LabelWriter 4XL	DYMO LabelWriter 4XL	DYMO LabelWriter 4XL	Raster	Auto	medium
+not-recognised	DYMO	LabelWriter 550	DYMO LabelWriter 550	DYMO LabelWriter 550	Raster	Auto	medium
+not-recognised	DYMO	LabelWriter 550 Turbo	DYMO LabelWriter 550 Turbo	DYMO LabelWriter 550 Turbo	Raster	Auto	medium
+not-recognised	DYMO	LabelWriter 5XL	DYMO LabelWriter 5XL	DYMO LabelWriter 5XL	Raster	Auto	medium
+not-recognised	DYMO	LabelWriter Wireless	DYMO LabelWriter Wireless	DYMO LabelWriter Wireless	Raster	Auto	medium
+unsupported-ok	Bixolon	SLP-DX220	BIXOLON SLP-DX220	BIXOLON SLP-DX220 - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	SLP-DX223	BIXOLON SLP-DX223	BIXOLON SLP-DX223 - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	SLP-DX420	BIXOLON SLP-DX420	BIXOLON SLP-DX420 - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	SLP-DX423	BIXOLON SLP-DX423	BIXOLON SLP-DX423 - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	SLP-TX400	BIXOLON SLP-TX400	BIXOLON SLP-TX400 - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	SLP-TX403	BIXOLON SLP-TX403	BIXOLON SLP-TX403 - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	SLP-TX420	BIXOLON SLP-TX420	BIXOLON SLP-TX420 - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	SLP-TX220	BIXOLON SLP-TX220	BIXOLON SLP-TX220 - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	SLP-DL410	BIXOLON SLP-DL410	BIXOLON SLP-DL410 - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	XD3-40d	BIXOLON XD3-40d	BIXOLON XD3-40d - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	XD3-40t	BIXOLON XD3-40t	BIXOLON XD3-40t - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	XD5-40d	BIXOLON XD5-40d	BIXOLON XD5-40d - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	XD5-40t	BIXOLON XD5-40t	BIXOLON XD5-40t - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	XD5-43t	BIXOLON XD5-43t	BIXOLON XD5-43t - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	XT5-40	BIXOLON XT5-40	BIXOLON XT5-40 - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	XL5-40CT	BIXOLON XL5-40CT	BIXOLON XL5-40CT - BPL-Z	Other	Auto	medium
+unsupported-ok	Bixolon	SLP-T400	BIXOLON SLP-T400	BIXOLON SLP-T400 - BPL-E	Other	Auto	medium
+unsupported-ok	Bixolon	SLP-D420	BIXOLON SLP-D420	BIXOLON SLP-D420 - BPL-E	Other	Auto	medium
+unsupported-ok	Bixolon	SPP-L310	BIXOLON SPP-L310	BIXOLON SPP-L310 - BPL-Z	Other	Auto	low
+unsupported-ok	Bixolon	SPP-L410	BIXOLON SPP-L410	BIXOLON SPP-L410 - BPL-Z	Other	Auto	low
+unsupported-ok	Bixolon	XM7-40	BIXOLON XM7-40	BIXOLON XM7-40 - BPL-Z	Other	Auto	low
+not-recognised	Bixolon	SRP-350III	BIXOLON SRP-350III	BIXOLON SRP-350III	ESCPOS	Auto	medium
+not-recognised	Bixolon	SRP-330II	BIXOLON SRP-330II	BIXOLON SRP-330II	ESCPOS	Auto	medium
+correct	Epson	TM-T20II	EPSON TM-T20II Receipt	EPSON TM-T20II Receipt5 (APD5 variant)	ESCPOS	EscPos	medium
+correct	Epson	TM-T20III	EPSON TM-T20III Receipt	EPSON TM-T20III Receipt5 (APD5 variant)	ESCPOS	EscPos	medium
+correct	Epson	TM-T82	EPSON TM-T82 Receipt	EPSON TM-T82 Receipt5 (APD5 variant)	ESCPOS	EscPos	medium
+correct	Epson	TM-T82III	EPSON TM-T82III Receipt	EPSON TM-T82III Receipt5 (APD5 variant)	ESCPOS	EscPos	medium
+correct	Epson	TM-T88V	EPSON TM-T88V Receipt	EPSON TM-T88V Receipt5 (APD5 variant)	ESCPOS	EscPos	medium
+correct	Epson	TM-T88VI	EPSON TM-T88VI Receipt	EPSON TM-T88VI Receipt5 (APD5 variant)	ESCPOS	EscPos	medium
+correct	Epson	TM-T88VII	EPSON TM-T88VII Receipt	EPSON TM-T88VII Receipt5 (APD5 variant)	ESCPOS	EscPos	medium
+correct	Epson	TM-m30II	EPSON TM-m30II Receipt	EPSON TM-m30II Receipt5 (APD5 variant)	ESCPOS	EscPos	medium
+correct	Epson	TM-U220	EPSON TM-U220 Receipt	EPSON TM-U220 Receipt5 (APD5 variant)	ESCPOS	EscPos	medium
+wrong(no such language in app)	Epson	ColorWorks CW-C4000	Epson CW-C4000u	Epson CW-C4000u	ESC/Label	EscPos	high
+wrong(no such language in app)	Epson	ColorWorks CW-C6000A	Epson CW-C6000Au	Epson CW-C6000Au	ESC/Label	EscPos	high
+wrong(no such language in app)	Epson	ColorWorks CW-C6000P	Epson CW-C6000Pu	Epson CW-C6000Pu	ESC/Label	EscPos	high
+wrong(no such language in app)	Epson	ColorWorks CW-C6500A	Epson CW-C6500Au	Epson CW-C6500Au	ESC/Label	EscPos	high
+wrong(no such language in app)	Epson	ColorWorks C7500	Epson Colorworks C7500	Epson Colorworks C7500	ESC/Label	EscPos	high
+wrong(no such language in app)	Epson	ColorWorks CW-C8000	Epson CW-C8000u	Epson CW-C8000u	ESC/Label	EscPos	high
+wrong	Epson	ColorWorks C3500 (TM-C3500)	EPSON TM-C3500	EPSON TM-C3500	Raster	EscPos	low
+not-recognised	Star	TSP100 / TSP143	Star TSP100 Cutter (TSP143)	Star TSP100 Cutter (TSP143)	Raster	Auto	medium
+not-recognised	Star	TSP143IIIU	Star TSP143IIIU Cutter	Star TSP100 Cutter (TSP143)	Raster	Auto	low
+unsupported-ok	Star	TSP143IV	Star TSP143IV	Star TSP100IV	StarPRNT	Auto	low
+unsupported-ok	Star	TSP650II	Star TSP650II Cutter (TSP654II)	Star TSP650II	Other	Auto	low
+unsupported-ok	Star	mC-Print3 (MCP31)	Star MCP31	Star mC-Print3	StarPRNT	Auto	low
+unsupported-ok	Star	mC-Print2 (MCP21)	Star MCP21	Star mC-Print2	StarPRNT	Auto	low
+unsupported-ok	Star	mC-Label3	Star mC-Label3	Star mC-Label3	StarPRNT	Auto	low
+not-recognised	Xprinter	XP-420B	Xprinter XP-420B	Xprinter XP-420B	TSPL	Auto	medium
+not-recognised	Xprinter	XP-460B	Xprinter XP-460B	Xprinter XP-460B	TSPL	Auto	medium
+not-recognised	Xprinter	XP-360B	Xprinter XP-360B	Xprinter XP-360B	TSPL	Auto	low
+not-recognised	Xprinter	XP-470B	Xprinter XP-470B	Xprinter XP-470B	TSPL	Auto	low
+not-recognised	Xprinter	XP-450B	Xprinter XP-450B	Xprinter XP-450B	TSPL	Auto	low
+not-recognised	Xprinter	XP-410B	Xprinter XP-410B	Xprinter XP-410B	TSPL	Auto	low
+not-recognised	Xprinter	XP-365B	Xprinter XP-365B	Xprinter XP-365B	TSPL	Auto	low
+not-recognised	Xprinter	XP-D4601B	Xprinter XP-D4601B	Xprinter XP-D4601B	TSPL	Auto	low
+not-recognised	Xprinter	XP-DT108B	Xprinter XP-DT108B LABEL	Xprinter XP-DT108B LABEL	TSPL	Auto	high
+not-recognised	Xprinter	XP-233B	Xprinter XP-233B	Xprinter XP-233B	TSPL	Auto	medium
+not-recognised	Xprinter	XP-235B	Xprinter XP-235B	Xprinter XP-235B	TSPL	Auto	medium
+not-recognised	Xprinter	XP-236B	Xprinter XP-236B	Xprinter XP-236B	TSPL	Auto	medium
+not-recognised	Xprinter	XP-237B	Xprinter XP-237B	Xprinter XP-237B	TSPL	Auto	medium
+not-recognised	Xprinter	XP-80C	XP-80C	XP-80C	ESCPOS	Auto	low
+not-recognised	Xprinter	XP-58	XP-58	XP-58	ESCPOS	Auto	low
+not-recognised	Xprinter	XP-Q200	XP-Q200	XP-Q200	ESCPOS	Auto	low
+correct	Rongta	RP410	RONGTA RP410(TSPL 203DPI)	RONGTA RP410(TSPL 203DPI)	TSPL	Tspl	high
+correct	Rongta	RP400A	RONGTA RP400A(TSPL 203DPI)	RONGTA RP400A(TSPL 203DPI)	TSPL	Tspl	high
+correct	Rongta	RP400H	RONGTA RP400H(TSPL 203DPI)	RONGTA RP400H(TSPL 203DPI)	TSPL	Tspl	high
+correct	Rongta	RP310	RONGTA RP310(TSPL 203DPI)	RONGTA RP310(TSPL 203DPI)	TSPL	Tspl	high
+correct	Rongta	RP311	RONGTA RP311(TSPL 203DPI)	RONGTA RP311(TSPL 203DPI)	TSPL	Tspl	high
+correct	Rongta	RP211	RONGTA RP211(TSPL 203DPI)	RONGTA RP211(TSPL 203DPI)	TSPL	Tspl	high
+correct	Rongta	RI460	RONGTA RI460(TSPL 203DPI)	RONGTA RI460(TSPL 203DPI)	TSPL	Tspl	high
+not-recognised	Rongta	RP410	RONGTA RP410	RONGTA RP410	TSPL	Auto	medium
+correct	Rongta	RP400C	RONGTA RP400C(ZPL 203DPI)	RONGTA RP400C(ZPL 203DPI)	ZPL	Zpl	high
+correct	Rongta	RI463	RONGTA RI463(TSPL 300DPI)	RONGTA RI463(TSPL 300DPI)	TSPL	Tspl	high
+not-recognised	Rongta	RP80	RONGTA 80mm Series Printer	RONGTA 80mm Series Printer	ESCPOS	Auto	low
+not-recognised	HPRT	Apollo	HPRT Apollo (203 dpi)	HPRT Apollo (203 dpi)	TSPL	Auto	medium
+correct	HPRT	Apollo	HPRT Apollo (203 dpi) - ZPL	HPRT Apollo (203 dpi) - ZPL	ZPL	Zpl	high
+not-recognised	HPRT	Ares	HPRT Ares (203 dpi)	HPRT Ares (203 dpi)	TSPL	Auto	medium
+correct	HPRT	Ares	HPRT Ares (203 dpi) - ZPL	HPRT Ares (203 dpi) - ZPL	ZPL	Zpl	high
+not-recognised	HPRT	Bingo	HPRT Bingo (203 dpi)	HPRT Bingo (203 dpi)	TSPL	Auto	medium
+correct	HPRT	Bingo	HPRT Bingo (203 dpi) - ZPL	HPRT Bingo (203 dpi) - ZPL	ZPL	Zpl	high
+not-recognised	HPRT	HT300	HPRT HT300	HPRT HT300	TSPL	Auto	low
+not-recognised	HPRT	HT100	HPRT HT100	HPRT HT100	TSPL	Auto	low
+not-recognised	HPRT	N41	HPRT N41	HPRT N41	TSPL	Auto	low
+not-recognised	HPRT	SL42	HPRT SL42	HPRT SL42	TSPL	Auto	low
+not-recognised	HPRT	HD100	HPRT HD100	HPRT HD100	TSPL	Auto	low
+correct	iDPRT	DT46	iDPRT DT46 (203 dpi) - TSPL	iDPRT DT46 (203 dpi) - TSPL	TSPL	Tspl	high
+correct	iDPRT	EF400	iDPRT EF400 (203 dpi) - TSPL	iDPRT EF400 (203 dpi) - TSPL	TSPL	Tspl	high
+correct	iDPRT	F430	iDPRT F430 (203 dpi) - TSPL	iDPRT F430 (203 dpi) - TSPL	TSPL	Tspl	high
+correct	iDPRT	DP4 Plus	iDPRT DP4 Plus (203 dpi) - TSPL	iDPRT DP4 Plus (203 dpi) - TSPL	TSPL	Tspl	high
+correct	iDPRT	DTP8	iDPRT DTP8 (203 dpi) - TSPL	iDPRT DTP8 (203 dpi) - TSPL	TSPL	Tspl	high
+not-recognised	iDPRT	E430B	iDPRT E430B (203 dpi)	iDPRT E430B (203 dpi)	TSPL	Auto	medium
+not-recognised	iDPRT	ET42	iDPRT ET42 (203 dpi)	iDPRT ET42 (203 dpi)	TSPL	Auto	medium
+not-recognised	iDPRT	320T	iDPRT 320T (203 dpi)	iDPRT 320T (203 dpi)	TSPL	Auto	medium
+not-recognised	iDPRT	FJ-4200	iDPRT FJ-4200 (203 dpi)	iDPRT FJ-4200 (203 dpi)	TSPL	Auto	medium
+not-recognised	iDPRT	SP410	iDPRT SP410	iDPRT SP410	TSPL	Auto	low
+not-recognised	iDPRT	SP420	iDPRT SP420	iDPRT SP420	TSPL	Auto	low
+not-recognised	iDPRT	iD4S	iDPRT iD4S	iDPRT iD4S	TSPL	Auto	low
+not-recognised	iDPRT	iE4S	iDPRT iE4S	iDPRT iE4S	TSPL	Auto	low
+not-recognised	Munbyn	ITPP941	MUNBYN ITPP941	ITPP941	TSPL	Auto	low
+not-recognised	Munbyn	RW401 (RealWriter 401)	MUNBYN RW401	RW401	TSPL	Auto	low
+not-recognised	Munbyn	ITPP130	MUNBYN ITPP130	ITPP130	TSPL	Auto	low
+not-recognised	Rollo	X1038 (wired)	Rollo Printer	Rollo Printer	TSPL	Auto	low
+not-recognised	Rollo	X1040 (wireless)	Rollo X1040	Rollo X1040	Raster	Auto	low
+not-recognised	Jadens	JD-268BT	JD-268BT	JD-268BT	TSPL	Auto	low
+not-recognised	Phomemo	PM-246S	PM-246S	Phomemo PM-246S	TSPL	Auto	low
+not-recognised	Beeprt	BY-426BT	Beeprt BY-426BT	Beeprt BY-426BT	TSPL	Auto	low
+not-recognised	Gainscha	GA-2408T	Gainscha GA-2408T	Gainscha GA-2408T	TSPL	Auto	medium
+not-recognised	Gainscha	GA-3406T	Gainscha GA-3406T	Gainscha GA-3406T	TSPL	Auto	medium
+not-recognised	Gainscha	GE-2408D	Gainscha GE-2408D	Gainscha GE-2408D	TSPL	Auto	medium
+not-recognised	Gainscha	GE-2406T	Gainscha GE-2406T	Gainscha GE-2406T	TSPL	Auto	medium
+not-recognised	Gainscha	GH-2410T	Gainscha GH-2410T	Gainscha GH-2410T	TSPL	Auto	medium
+not-recognised	Gainscha	GI-2406T PLUS	Gainscha GI-2406T PLUS	Gainscha GI-2406T PLUS	TSPL	Auto	medium
+not-recognised	Gainscha	GB-2204DB	Gainscha GB-2204DB	Gainscha GB-2204DB	TSPL	Auto	medium
+not-recognised	Gainscha	B300	Gainscha B300	Gainscha B300	TSPL	Auto	medium
+not-recognised	Gprinter	GP-1324D	Gprinter GP-1324D	Gprinter  GP-1324D	TSPL	Auto	low
+not-recognised	Gprinter	GP-1924D	Gprinter GP-1924D	Gprinter  GP-1924D	TSPL	Auto	low
+not-recognised	Gprinter	GP-3120TU	Gprinter GP-3120TU	Gprinter  GP-3120TU	TSPL	Auto	low
+not-recognised	Gprinter	GP-9025T	Gprinter GP-9025T	Gprinter  GP-9025T	TSPL	Auto	low
+not-recognised	Gprinter	GP-2120TU	Gprinter GP-2120TU	Gprinter  GP-2120TU	TSPL	Auto	low
+not-recognised	Gprinter	GP-L80180	GP-L80180 Series	GP-L80180 Series	ESCPOS	Auto	low
+unsupported-ok	Postek	C168/200s	POSTEK C168/200s	POSTEK C168/200s	Other	Auto	medium
+unsupported-ok	Postek	C168/300s	POSTEK C168/300s	POSTEK C168/300s	Other	Auto	medium
+unsupported-ok	Postek	G2000	POSTEK G2000	POSTEK G2000	Other	Auto	medium
+unsupported-ok	Postek	G3000	POSTEK G3000	POSTEK G3000	Other	Auto	medium
+unsupported-ok	Postek	G-2108	POSTEK G-2108	POSTEK G-2108	Other	Auto	medium
+unsupported-ok	Postek	G-3106	POSTEK G-3106	POSTEK G-3106	Other	Auto	medium
+unsupported-ok	Postek	E200 Series	POSTEK E200 Series	POSTEK E200 Series	Other	Auto	medium
+unsupported-ok	Postek	E300 Series	POSTEK E300 Series	POSTEK E300 Series	Other	Auto	medium
+unsupported-ok	Postek	EM Series (203 dpi)	POSTEK EM Series (203 dpi)	POSTEK EM Series (203 dpi)	Other	Auto	medium
+unsupported-ok	Postek	CP Series (203 dpi)	POSTEK CP Series (203 dpi)	POSTEK CP Series (203 dpi)	Other	Auto	medium
+unsupported-ok	Postek	GE2	POSTEK GE2	POSTEK GE2	Other	Auto	medium
+unsupported-ok	Toshiba TEC	B-EV4 (203 dpi)	TEC B-EV4 (203 dpi)	TEC B-EV4 (203 dpi)	Other	Auto	high
+unsupported-ok	Toshiba TEC	B-EV4 (300 dpi)	TEC B-EV4 (300 dpi)	TEC B-EV4 (300 dpi)	Other	Auto	high
+unsupported-ok	Toshiba TEC	B-EV4-G	TEC B-EV4-G	TEC B-EV4-G	Other	Auto	high
+unsupported-ok	Toshiba TEC	B-EV4-T	TEC B-EV4-T	TEC B-EV4-T	Other	Auto	high
+unsupported-ok	Toshiba TEC	B-FV4 (203 dpi)	TOSHIBA B-FV4 (203 dpi)	TOSHIBA B-FV4 (203 dpi)	Other	Auto	high
+unsupported-ok	Toshiba TEC	B-EX4T1 (203 dpi)	TOSHIBA B-EX4T1 (203 dpi)	TOSHIBA B-EX4T1 (203 dpi)	Other	Auto	high
+unsupported-ok	Toshiba TEC	B-EX4T1 (305 dpi)	TOSHIBA B-EX4T1 (305 dpi)	TOSHIBA B-EX4T1 (305 dpi)	Other	Auto	high
+unsupported-ok	Toshiba TEC	B-EX4T2 (300 dpi)	TOSHIBA B-EX4T2 (300 dpi)	TOSHIBA B-EX4T2 (300 dpi)	Other	Auto	high
+unsupported-ok	Toshiba TEC	B-SX4T (203 dpi)	TEC B-SX4T (203 dpi)	TEC B-SX4T (203 dpi)	Other	Auto	high
+unsupported-ok	Toshiba TEC	B-SA4T (203 dpi)	TEC B-SA4T (203 dpi)	TEC B-SA4T (203 dpi)	Other	Auto	high
+unsupported-ok	Toshiba TEC	B-452	TEC B-452	TEC B-452	Other	Auto	high
+unsupported-ok	Toshiba TEC	BV410D	TOSHIBA BV410D-GS	TOSHIBA BV410D	Other	Auto	low
+unsupported-ok	Toshiba TEC	BV420D	TOSHIBA BV420D-GS	TOSHIBA BV420D	Other	Auto	low
+unsupported-ok	Toshiba TEC	BV410T	TOSHIBA BV410T-GS	TOSHIBA BV410T	Other	Auto	low
+unsupported-ok	Toshiba TEC	BV420T	TOSHIBA BV420T-GS	TOSHIBA BV420T	Other	Auto	low
+unsupported-ok	cab	A4+	cab A4+ (300 dpi)	cab A4+ (300 dpi)	Other	Auto	high
+unsupported-ok	cab	A4+	cab A4+ (203 dpi)	cab A4+ (203 dpi)	Other	Auto	high
+unsupported-ok	cab	EOS1	cab EOS1 (203 dpi)	cab EOS1 (203 dpi)	Other	Auto	high
+unsupported-ok	cab	EOS1	cab EOS1 (300 dpi)	cab EOS1 (300 dpi)	Other	Auto	high
+unsupported-ok	cab	EOS4	cab EOS4 (300 dpi)	cab EOS4 (300 dpi)	Other	Auto	high
+unsupported-ok	cab	EOS2	cab EOS2 (300 dpi)	cab EOS2 (300 dpi)	Other	Auto	high
+unsupported-ok	cab	Hermes A4L	cab Hermes A4L (300 dpi)	cab Hermes A4L (300 dpi)	Other	Auto	high
+unsupported-ok	cab	SQUIX 4	cab SQUIX 4/300	cab SQUIX 4	Other	Auto	low
+unsupported-ok	cab	MACH 4S	cab MACH 4S/300	cab MACH 4S	Other	Auto	low
+unsupported-ok	cab	MACH1	cab MACH1 (203 dpi)	cab MACH1	Other	Auto	low
+unsupported-ok	cab	MACH2	cab MACH2 (203 dpi)	cab MACH2	Other	Auto	low
+unsupported-ok	Printronix	SL4M	Printronix Auto ID SL4M (203 dpi) - PGL	Printronix Auto ID SL4M (203 dpi) - PGL	Other	Auto	high
+unsupported-ok	Printronix	SL4M	Printronix Auto ID SL4M (305 dpi) - PGL	Printronix Auto ID SL4M (305 dpi) - PGL	Other	Auto	high
+unsupported-ok	Printronix	SI400	Printronix Auto ID SI400 (203 dpi) - PGL	Printronix Auto ID SI400 (203 dpi) - PGL	Other	Auto	high
+unsupported-ok	Printronix	SK400	Printronix Auto ID SK400 (203 dpi) - PGL	Printronix Auto ID SK400 (203 dpi) - PGL	Other	Auto	high
+unsupported-ok	Printronix	SE400	Printronix Auto ID SE400 (203 dpi) - PGL	Printronix Auto ID SE400 (203 dpi) - PGL	Other	Auto	high
+unsupported-ok	Printronix	BD200	Printronix Auto ID BD200 (203 dpi) - PGL	Printronix Auto ID BD200 (203 dpi) - PGL	Other	Auto	high
+unsupported-ok	Printronix	SL5204r	Printronix Auto ID SL5204r - PGL	Printronix Auto ID SL5204r - PGL	Other	Auto	high
+unsupported-ok	Printronix	T8204	Printronix Auto ID T8204 (203 dpi) - PGL	Printronix Auto ID T8204 (203 dpi) - PGL	Other	Auto	low
+not-recognised	Wincode	C342C	WINCODE C342C	WINCODE C342C	TSPL	Auto	low
+not-recognised	Wincode	LP423A	WINCODE LP423A	WINCODE LP423A	TSPL	Auto	low
+not-recognised	Wincode	C343C	WINCODE C343C	WINCODE C343C	TSPL	Auto	low
+not-recognised	Deli	888T	Deli 888T	Deli 888T	TSPL	Auto	low
+not-recognised	Deli	DL-740C	Deli DL-740C	Deli DL-740C	TSPL	Auto	low
+not-recognised	Deli	DL-720C	Deli DL-720C	Deli DL-720C	TSPL	Auto	low
+not-recognised	Deli	DL-730C	Deli DL-730C	Deli DL-730C	TSPL	Auto	low
+not-recognised	Deli	886A	Deli 886A	Deli 886A	TSPL	Auto	low
+not-recognised	Deli	DL-210TE	Deli DL-210TE	Deli DL-210TE	TSPL	Auto	low
+not-recognised	Deli	DL-410TZ	Deli DL-410TZ	Deli DL-410TZ	TSPL	Auto	low
+not-recognised	Deli	DL-320	Deli DL-320	Deli DL-320	TSPL	Auto	low

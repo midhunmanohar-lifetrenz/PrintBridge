@@ -1,0 +1,17 @@
+<Window RequestedThemeVariant="Light" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="LtzPrintBridge.Views.AddPrinterWindow" Title="Add network printer" Width="440" SizeToContent="Height"
+        CanResize="False" WindowStartupLocation="CenterOwner" Background="White" FontFamily="Inter, Segoe UI, sans-serif">
+  <StackPanel Margin="24" Spacing="10">
+    <TextBlock Text="Add network printer" FontSize="19" FontWeight="Bold"/>
+    <TextBlock Text="For printers with an IP address. Port 9100 is standard." Foreground="#5D6C78" TextWrapping="Wrap"/>
+    <TextBlock Text="Name"/><TextBox x:Name="NameBox" Watermark="Pharmacy label printer"/>
+    <Grid ColumnDefinitions="*,100" ColumnSpacing="8"><StackPanel Spacing="4"><TextBlock Text="IP address or host"/><TextBox x:Name="HostBox" Watermark="192.168.1.50"/></StackPanel>
+      <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="Port"/><TextBox x:Name="PortBox" Text="9100"/></StackPanel></Grid>
+    <Grid ColumnDefinitions="*,*" ColumnSpacing="8"><StackPanel Spacing="4"><TextBlock Text="Brand"/><ComboBox x:Name="VendorBox" HorizontalAlignment="Stretch" SelectedIndex="0"/></StackPanel>
+      <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="Language"/><ComboBox x:Name="LangBox" HorizontalAlignment="Stretch" SelectedIndex="0"><ComboBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding Converter={StaticResource LangName}}"/></DataTemplate></ComboBox.ItemTemplate></ComboBox></StackPanel></Grid>
+    <TextBlock x:Name="Err" Foreground="#B42318" IsVisible="False"/>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,8,0,0">
+      <Button Content="Cancel" Click="OnCancel" Background="White" BorderBrush="#D9E0E3" BorderThickness="1" Padding="14,8"/><Button Content="Add printer" Click="OnAdd" Background="#0B7A75" Foreground="White" Padding="14,8"/>
+    </StackPanel>
+  </StackPanel>
+</Window>

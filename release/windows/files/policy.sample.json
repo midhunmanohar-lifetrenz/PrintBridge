@@ -1,0 +1,12 @@
+{
+  // Rename to policy.json and keep it next to PrintBridge.exe
+  // (or put it in C:\ProgramData\LtzPrintBridge\policy.json) to preload settings for a clinic.
+  // Websites listed here never show the permission prompt.
+  "acceptedHosts": ["app.yourclinic.com", "uat.yourclinic.com"],
+  "blockedHosts": [],
+  "defaultPrinter": "Pharmacy Label Printer",
+  // false on shared servers (Citrix, Remote Desktop): only websites may print, not other programs on the computer
+  "allowLocalPrograms": true,
+  // text encoding per printer id for printers that need a code page (default is UTF-8)
+  "printerEncodings": { "spool:Old Eltron Printer": "windows-1252" }
+}

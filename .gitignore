@@ -1,0 +1,17 @@
+bin/
+obj/
+dist/
+TestResults/
+.vs/
+.idea/
+*.user
+.DS_Store
+*.p12
+*.pfx
+*.snk
+settings.json
+# working copies; the tracked guides are in docs/
+/PrintBridge_User_Guide.docx
+/PrintBridge_Release_Guide.docx
+# internal planning document (names customer sites)
+/LTZ_PrintBridge_Project_Plan_v2.docx

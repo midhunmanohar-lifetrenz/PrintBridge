@@ -1,0 +1,234 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="LtzPrintBridge.Views.MainWindow"
+        Title="PrintBridge" Width="1040" Height="700" MinWidth="820" MinHeight="520"
+        Icon="/Assets/icon.ico" Background="{DynamicResource Win}" FontFamily="Inter, Segoe UI, sans-serif" FontSize="14">
+  <Window.Styles>
+    <Style Selector="RadioButton.nav">
+      <Setter Property="Foreground" Value="#B7C4CF"/>
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border Name="bd" Padding="14,10" CornerRadius="8" Background="Transparent" Cursor="Hand">
+            <ContentPresenter Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" FontWeight="Medium"/>
+          </Border>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="RadioButton.nav:pointerover /template/ Border#bd"><Setter Property="Background" Value="#1B2A36"/></Style>
+    <Style Selector="RadioButton.nav:checked"><Setter Property="Foreground" Value="White"/></Style>
+    <Style Selector="RadioButton.nav:checked /template/ Border#bd"><Setter Property="Background" Value="#223341"/></Style>
+    <Style Selector="Button.primary"><Setter Property="Background" Value="{DynamicResource Accent}"/><Setter Property="Foreground" Value="White"/><Setter Property="Padding" Value="14,8"/><Setter Property="CornerRadius" Value="8"/></Style>
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter"><Setter Property="Background" Value="#096560"/><Setter Property="Foreground" Value="White"/></Style>
+    <Style Selector="Button.ghost"><Setter Property="Background" Value="{DynamicResource Panel}"/><Setter Property="BorderBrush" Value="{DynamicResource Line}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="Padding" Value="14,8"/><Setter Property="CornerRadius" Value="8"/></Style>
+    <Style Selector="Button.sm"><Setter Property="Padding" Value="10,4"/><Setter Property="FontSize" Value="13"/></Style>
+    <Style Selector="TextBlock.h2"><Setter Property="FontSize" Value="24"/><Setter Property="FontWeight" Value="Bold"/><Setter Property="Foreground" Value="{DynamicResource Ink}"/></Style>
+    <Style Selector="TextBlock.sub"><Setter Property="Foreground" Value="{DynamicResource Muted}"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
+    <Style Selector="TextBlock.mono"><Setter Property="FontFamily" Value="Consolas, Menlo, monospace"/><Setter Property="FontSize" Value="12.5"/></Style>
+    <Style Selector="Border.panel"><Setter Property="Background" Value="{DynamicResource Panel}"/><Setter Property="BorderBrush" Value="{DynamicResource Line}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="10"/><Setter Property="Padding" Value="16"/></Style>
+    <Style Selector="Border.chip"><Setter Property="BorderBrush" Value="{DynamicResource Line}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="5"/><Setter Property="Padding" Value="7,1"/><Setter Property="Background" Value="{DynamicResource Chip}"/></Style>
+    <Style Selector="ListBox.cards ListBoxItem"><Setter Property="Padding" Value="10"/><Setter Property="Margin" Value="0,0,0,8"/><Setter Property="CornerRadius" Value="10"/><Setter Property="BorderThickness" Value="1"/><Setter Property="BorderBrush" Value="{DynamicResource Line}"/><Setter Property="Background" Value="{DynamicResource Panel}"/></Style>
+    <Style Selector="ListBox.cards ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource Panel}"/><Setter Property="BorderBrush" Value="{DynamicResource Accent}"/></Style>
+    <Style Selector="ListBox.cards ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SelectedCard}"/><Setter Property="BorderBrush" Value="{DynamicResource Accent}"/></Style>
+  </Window.Styles>
+
+  <Grid ColumnDefinitions="224,*">
+    <!-- Sidebar -->
+    <Border Background="{DynamicResource Sidebar}" Padding="12,16">
+      <DockPanel LastChildFill="False">
+        <StackPanel DockPanel.Dock="Top" Spacing="2">
+          <StackPanel Orientation="Horizontal" Spacing="10" Margin="6,0,0,18">
+            <Image Source="/Assets/icon.png" Width="34" Height="34"/>
+            <StackPanel VerticalAlignment="Center"><TextBlock Text="PrintBridge" Foreground="White" FontWeight="Bold" FontSize="17"/><TextBlock Text="Label print service" Foreground="#8FA1AF" FontSize="11"/></StackPanel>
+          </StackPanel>
+          <RadioButton Classes="nav" GroupName="nav" Content="Printers" IsChecked="True" Tag="0" Click="OnNav"/>
+          <RadioButton Classes="nav" GroupName="nav" Content="Websites" Tag="1" Click="OnNav"/>
+          <RadioButton Classes="nav" GroupName="nav" Content="Print jobs" Tag="2" Click="OnNav"/>
+          <RadioButton Classes="nav" GroupName="nav" Content="Diagnostics" Tag="3" Click="OnNav"/>
+          <RadioButton Classes="nav" GroupName="nav" Content="Settings" Tag="4" Click="OnNav"/>
+        </StackPanel>
+        <Border DockPanel.Dock="Bottom" BorderBrush="#2A3B49" BorderThickness="1" CornerRadius="10" Padding="12" Margin="2,0,2,2">
+          <StackPanel Spacing="4">
+            <DockPanel><TextBlock Text="Bridge" Foreground="#8FA1AF" FontSize="12"/><TextBlock Text="{Binding BridgeText}" Foreground="{Binding BridgeColor}" FontSize="12" HorizontalAlignment="Right"/></DockPanel>
+            <TextBlock Text="{Binding PortsText}" Foreground="#DBE6EE" FontSize="11" FontFamily="Consolas, Menlo, monospace"/>
+            <TextBlock Text="{Binding VersionText}" Foreground="#8FA1AF" FontSize="11"/>
+          </StackPanel>
+        </Border>
+      </DockPanel>
+    </Border>
+
+    <!-- Pages -->
+    <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><Grid Margin="26,22">
+      <!-- PRINTERS -->
+      <Grid IsVisible="{Binding IsPrinters}" RowDefinitions="Auto,Auto,*">
+        <DockPanel Margin="0,0,0,16">
+          <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+            <Button Classes="ghost" Content="Scan again" Click="OnRescan"/>
+            <Button Classes="primary" Content="Add network printer" Click="OnAddPrinter"/>
+          </StackPanel>
+          <StackPanel><TextBlock Classes="h2" Text="Printers"/><TextBlock Classes="sub" Text="{Binding Summary}"/></StackPanel>
+        </DockPanel>
+                <Border Grid.Row="1" Classes="panel" Padding="14,10" Margin="0,0,0,14">
+          <StackPanel Spacing="10">
+          <DockPanel>
+            <ComboBox DockPanel.Dock="Right" Width="300" VerticalAlignment="Center" ItemsSource="{Binding Printers}" SelectedItem="{Binding DefaultPrinter, Mode=TwoWay}">
+              <ComboBox.ItemTemplate><DataTemplate><StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="{Binding Name}"/><TextBlock Text="{Binding TransportText}" Foreground="{DynamicResource Muted}" FontSize="12" VerticalAlignment="Center"/></StackPanel></DataTemplate></ComboBox.ItemTemplate>
+            </ComboBox>
+            <StackPanel VerticalAlignment="Center"><TextBlock Text="Default printer" FontWeight="SemiBold"/><TextBlock Classes="sub" FontSize="12" Text="Pick the printer your labels should come out of"/></StackPanel>
+          </DockPanel>
+          <Border Height="1" Background="{DynamicResource Line}"/>
+          <DockPanel>
+            <ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding RouteAllToDefault, Mode=TwoWay}" OnContent="" OffContent="" VerticalAlignment="Center"/>
+            <StackPanel VerticalAlignment="Center"><TextBlock Text="Send every print request here" FontWeight="SemiBold"/><TextBlock Classes="sub" FontSize="12" Text="Websites cannot pick another printer"/></StackPanel>
+          </DockPanel>
+          <Border Height="1" Background="{DynamicResource Line}"/>
+          <DockPanel>
+            <ComboBox DockPanel.Dock="Right" Width="210" VerticalAlignment="Center" ItemsSource="{Binding PreviewModes}" SelectedIndex="{Binding PreviewModeIndex, Mode=TwoWay}"/>
+            <StackPanel VerticalAlignment="Center"><TextBlock Text="Preview before printing" FontWeight="SemiBold"/><TextBlock Classes="sub" FontSize="12" Text="Show the label first and let me choose how many copies. Off sends it straight to the printer."/></StackPanel>
+          </DockPanel>
+        </StackPanel>
+        </Border>
+        <Grid x:Name="PrinterSplit" Grid.Row="2" ColumnDefinitions="*,370">
+          <ListBox x:Name="PrinterList" Classes="cards" ItemsSource="{Binding Printers}" SelectedItem="{Binding SelectedPrinter, Mode=TwoWay}" Background="Transparent" Margin="0,0,16,0">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Grid ColumnDefinitions="48,*,Auto">
+                  <Border Width="44" Height="44" CornerRadius="10" Background="{DynamicResource Sidebar}" VerticalAlignment="Center"><TextBlock Text="{Binding VendorBadge}" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+                  <StackPanel Grid.Column="1" Margin="12,0" Spacing="5" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="15"/>
+                      <Border IsVisible="{Binding IsDefault}" BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="5" Padding="6,0"><TextBlock Text="Default" Foreground="{DynamicResource AccentText}" FontSize="11" FontWeight="SemiBold"/></Border>
+                    </StackPanel>
+                    <WrapPanel>
+                      <Border Classes="chip" Background="{DynamicResource AccentSoft}" BorderBrush="{DynamicResource Accent}" Margin="0,0,6,0"><TextBlock Classes="mono" FontSize="11" Foreground="{DynamicResource AccentText}" Text="{Binding LanguageText}"/></Border>
+                      <Border Classes="chip" Margin="0,0,6,0"><TextBlock Classes="mono" FontSize="11" Foreground="{DynamicResource Muted}" Text="{Binding TransportText}"/></Border>
+                      <Border Classes="chip"><TextBlock Classes="mono" FontSize="11" Foreground="{DynamicResource Muted}" Text="{Binding Vendor}"/></Border>
+                    </WrapPanel>
+                  </StackPanel>
+                  <Border Grid.Column="2" CornerRadius="99" Padding="10,3" VerticalAlignment="Center" Background="{Binding StatusLevel, Converter={StaticResource LevelBg}}">
+                    <TextBlock Text="{Binding Status}" FontSize="12" FontWeight="SemiBold" Foreground="{Binding StatusLevel, Converter={StaticResource LevelFg}}"/>
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+
+          <ScrollViewer x:Name="PrinterDetail" Grid.Column="1" VerticalScrollBarVisibility="Auto" IsVisible="{Binding HasSelection}"><Border Classes="panel" VerticalAlignment="Top">
+            <StackPanel Spacing="10">
+              <TextBlock Text="{Binding SelectedPrinter.Name}" FontSize="16" FontWeight="Bold" TextWrapping="Wrap"/>
+              <Border Background="{DynamicResource Backdrop}" CornerRadius="8" Padding="14">
+                <Border Background="#FDFDFB" CornerRadius="3" Padding="12" Width="230" HorizontalAlignment="Center" BoxShadow="0 4 12 0 #30000000">
+                  <StackPanel Spacing="4">
+                    <DockPanel><TextBlock x:Name="LblVendor" Classes="mono" FontSize="10" Foreground="#101418"/><TextBlock Classes="mono" FontSize="10" Foreground="#101418" HorizontalAlignment="Right" Text="50 x 25 mm"/></DockPanel>
+                    <TextBlock Text="TEST LABEL" FontSize="19" FontWeight="Bold" Foreground="#101418"/>
+                    <TextBlock Classes="mono" FontSize="10" Foreground="#101418" Text="PrintBridge"/>
+                    <StackPanel x:Name="Bars" Orientation="Horizontal" Height="40"/>
+                    <TextBlock Classes="mono" FontSize="10" Foreground="#101418" Text="123456789"/>
+                  </StackPanel>
+                </Border>
+              </Border>
+              <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="14">
+                <TextBlock Text="Status" Classes="sub"/><TextBlock Grid.Column="1" HorizontalAlignment="Right" Text="{Binding SelectedPrinter.Status}"/>
+                <TextBlock Grid.Row="1" Text="Language" Classes="sub" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" MinWidth="170" ItemsSource="{Binding LanguageChoices}" SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"><ComboBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding Converter={StaticResource LangName}}"/></DataTemplate></ComboBox.ItemTemplate></ComboBox>
+                <TextBlock Grid.Row="2" Text="Connection" Classes="sub"/><TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding SelectedPrinter.TransportText}"/>
+                <TextBlock Grid.Row="3" Text="Port" Classes="sub"/><TextBlock Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Classes="mono" Text="{Binding SelectedPrinter.Port}"/>
+                <TextBlock Grid.Row="4" Text="Driver" Classes="sub"/><TextBlock Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right" TextWrapping="Wrap" TextAlignment="Right" Classes="mono" Text="{Binding SelectedPrinter.Driver}"/>
+              </Grid>
+              <TextBlock Text="Command to send" Classes="sub" FontSize="12"/>
+              <TextBox Text="{Binding RawText, Mode=TwoWay}" AcceptsReturn="True" Height="130" FontFamily="Consolas, Menlo, monospace" FontSize="12" TextWrapping="NoWrap"/>
+              <WrapPanel>
+                <Button Classes="primary" Content="Print test label" Click="OnTest" Margin="0,0,8,8"/>
+                <Button Classes="ghost" Content="Send command" Click="OnSendRaw" Margin="0,0,8,8"/>
+                <Button Classes="ghost" Content="Make default" Click="OnDefault" Margin="0,0,8,8"/>
+                <Button Classes="ghost" Content="Remove" IsVisible="{Binding SelectedIsManual}" Click="OnRemovePrinter" Margin="0,0,8,8"/>
+              </WrapPanel>
+            </StackPanel>
+          </Border></ScrollViewer>
+        </Grid>
+      </Grid>
+
+      <!-- WEBSITES -->
+      <Grid IsVisible="{Binding IsHosts}" RowDefinitions="Auto,*,Auto">
+        <DockPanel Margin="0,0,0,16"><Button DockPanel.Dock="Right" Classes="ghost" Content="{Binding ResetPermissionsText}" Click="OnResetPermissions" VerticalAlignment="Center"/><StackPanel><TextBlock Classes="h2" Text="Websites"/><TextBlock Classes="sub" Text="Only websites on the allowed list can see your printers or print. Unknown websites ask first."/></StackPanel></DockPanel>
+        <Grid Grid.Row="1" ColumnDefinitions="3*,2*">
+          <Border Classes="panel" Margin="0,0,8,0"><DockPanel>
+            <TextBlock DockPanel.Dock="Top" Text="Allowed" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+              <Button DockPanel.Dock="Right" Classes="primary" Content="Allow" Click="OnAllowHost" Margin="8,0,0,0"/>
+              <TextBox Text="{Binding NewHost, Mode=TwoWay}" Watermark="app.example.com"/>
+            </DockPanel>
+            <ListBox ItemsSource="{Binding Allowed}" Background="Transparent"><ListBox.ItemTemplate><DataTemplate>
+              <DockPanel><StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6"><CheckBox Content="Preview" IsChecked="{Binding Preview, Mode=TwoWay}" IsVisible="{Binding $parent[Window].DataContext.PreviewSelected}" VerticalAlignment="Center" Margin="0,0,6,0"/><Button Classes="ghost sm" Content="Block" Click="OnBlockHost"/><Button Classes="ghost sm" Content="Remove" Click="OnRemoveHost"/></StackPanel><TextBlock Classes="mono" Text="{Binding Host}" VerticalAlignment="Center"/></DockPanel>
+            </DataTemplate></ListBox.ItemTemplate></ListBox>
+          </DockPanel></Border>
+          <Border Grid.Column="1" Classes="panel" Margin="8,0,0,0"><DockPanel>
+            <TextBlock DockPanel.Dock="Top" Text="Blocked" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock DockPanel.Dock="Top" Classes="sub" Text="Nothing blocked. Websites you block appear here." IsVisible="{Binding NoBlocked}"/>
+            <ListBox ItemsSource="{Binding Blocked}" Background="Transparent"><ListBox.ItemTemplate><DataTemplate>
+              <DockPanel><Button DockPanel.Dock="Right" Classes="ghost sm" Content="Unblock" Click="OnUnblockHost"/><TextBlock Classes="mono" Text="{Binding}" VerticalAlignment="Center"/></DockPanel>
+            </DataTemplate></ListBox.ItemTemplate></ListBox>
+          </DockPanel></Border>
+        </Grid>
+        <Border Grid.Row="2" Classes="panel" Margin="0,16,0,0" Height="170"><DockPanel>
+          <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+            <Button DockPanel.Dock="Right" Classes="ghost sm" Content="Clear" Click="OnClearRequests"/>
+            <StackPanel><TextBlock Text="Recent requests" FontWeight="Bold" FontSize="16"/><TextBlock Classes="sub" Text="Every time a website talks to PrintBridge it appears here. If your website is missing, it is not reaching the app."/></StackPanel>
+          </DockPanel>
+          <TextBlock DockPanel.Dock="Top" Classes="sub" Text="No website has connected yet." IsVisible="{Binding NoRequests}"/>
+          <ListBox ItemsSource="{Binding Requests}" Background="Transparent"><ListBox.ItemTemplate><DataTemplate>
+            <Grid ColumnDefinitions="70,200,170,50,*">
+              <TextBlock Classes="mono" Text="{Binding TimeText}"/><TextBlock Grid.Column="1" Classes="mono" Text="{Binding Site}" TextTrimming="CharacterEllipsis"/><TextBlock Grid.Column="2" Classes="mono" Text="{Binding What}" TextTrimming="CharacterEllipsis"/><TextBlock Grid.Column="3" Classes="mono" Text="{Binding Status}"/><TextBlock Grid.Column="4" Text="{Binding Result}" TextTrimming="CharacterEllipsis"/>
+            </Grid></DataTemplate></ListBox.ItemTemplate></ListBox>
+        </DockPanel></Border>
+      </Grid>
+
+      <!-- JOBS -->
+      <Grid IsVisible="{Binding IsJobs}" RowDefinitions="Auto,*">
+        <StackPanel Margin="0,0,0,16"><TextBlock Classes="h2" Text="Print jobs"/><TextBlock Classes="sub" Text="Time, website, printer and result only. Label content is never stored."/></StackPanel>
+        <Border Grid.Row="1" Classes="panel" Padding="0"><DockPanel>
+          <Grid DockPanel.Dock="Top" ColumnDefinitions="90,210,*,130,80,*" Margin="16,12">
+            <TextBlock Text="TIME" Classes="sub" FontSize="11"/><TextBlock Grid.Column="1" Text="WEBSITE" Classes="sub" FontSize="11"/><TextBlock Grid.Column="2" Text="PRINTER" Classes="sub" FontSize="11"/><TextBlock Grid.Column="3" Text="LANGUAGE" Classes="sub" FontSize="11"/><TextBlock Grid.Column="4" Text="SIZE" Classes="sub" FontSize="11"/><TextBlock Grid.Column="5" Text="RESULT" Classes="sub" FontSize="11"/>
+          </Grid>
+          <ListBox ItemsSource="{Binding JobList}" Background="Transparent"><ListBox.ItemTemplate><DataTemplate>
+            <Grid ColumnDefinitions="90,210,*,130,80,*">
+              <TextBlock Classes="mono" Text="{Binding TimeText}"/><TextBlock Grid.Column="1" Classes="mono" Text="{Binding Site}" TextTrimming="CharacterEllipsis"/><TextBlock Grid.Column="2" Text="{Binding Printer}" TextTrimming="CharacterEllipsis"/><TextBlock Grid.Column="3" Classes="mono" Text="{Binding Language}"/><TextBlock Grid.Column="4" Classes="mono" Text="{Binding SizeText}"/><TextBlock Grid.Column="5" Text="{Binding Result}" TextTrimming="CharacterEllipsis"/>
+            </Grid></DataTemplate></ListBox.ItemTemplate></ListBox>
+        </DockPanel></Border>
+      </Grid>
+
+      <!-- DIAGNOSTICS -->
+      <Grid IsVisible="{Binding IsDiag}" RowDefinitions="Auto,*">
+        <DockPanel Margin="0,0,0,16">
+          <WrapPanel DockPanel.Dock="Right" VerticalAlignment="Center">
+            <Button Classes="ghost" Content="Run checks" Click="OnRunDiag" Margin="0,0,8,0"/>
+            <Button Classes="primary" Content="Install certificate" Click="OnInstallCert" Margin="0,0,8,0"/>
+            <Button Classes="ghost" Content="Open test page" Click="OnOpenTest"/>
+          </WrapPanel>
+          <StackPanel><TextBlock Classes="h2" Text="Diagnostics"/><TextBlock Classes="sub" Text="Run these before calling support."/></StackPanel>
+        </DockPanel>
+        <ListBox Grid.Row="1" Classes="cards" ItemsSource="{Binding Diag}" Background="Transparent"><ListBox.ItemTemplate><DataTemplate>
+          <Grid ColumnDefinitions="70,*">
+            <Border CornerRadius="99" Padding="10,3" Margin="0,0,12,0" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{Binding Level, Converter={StaticResource LevelBg}}"><TextBlock Text="{Binding LevelText}" FontSize="12" FontWeight="SemiBold" Foreground="{Binding Level, Converter={StaticResource LevelFg}}"/></Border>
+            <StackPanel Grid.Column="1"><TextBlock Text="{Binding Title}" FontWeight="SemiBold"/><TextBlock Classes="sub" Text="{Binding Detail}"/></StackPanel>
+          </Grid></DataTemplate></ListBox.ItemTemplate></ListBox>
+      </Grid>
+
+      <!-- SETTINGS -->
+      <StackPanel IsVisible="{Binding IsSettings}" Spacing="16">
+        <StackPanel><TextBlock Classes="h2" Text="Settings"/><TextBlock Classes="sub" Text="Defaults suit most clinics. Change only if IT asks you to."/></StackPanel>
+        <Border Classes="panel"><StackPanel Spacing="14">
+          <DockPanel><ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding StartWithWindows, Mode=TwoWay}" OnContent="" OffContent=""/><StackPanel><TextBlock Text="{Binding AutostartText}" FontWeight="SemiBold"/><TextBlock Classes="sub" Text="{Binding AutostartHint}"/></StackPanel></DockPanel>
+          <DockPanel><ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding AllowLocalPrograms, Mode=TwoWay}" OnContent="" OffContent=""/><StackPanel><TextBlock Text="Allow programs on this computer" FontWeight="SemiBold"/><TextBlock Classes="sub" TextWrapping="Wrap" Text="Lets desktop programs and scripts on this computer print without a website name. Turn off on shared servers (Citrix, Remote Desktop)."/></StackPanel></DockPanel>
+          <DockPanel><TextBlock DockPanel.Dock="Right" Classes="mono" Text="{Binding PortsText}" VerticalAlignment="Center"/><StackPanel><TextBlock Text="Ports" FontWeight="SemiBold"/><TextBlock Classes="sub" Text="Change them in settings.json if another program uses them."/></StackPanel></DockPanel>
+          <DockPanel><Button DockPanel.Dock="Right" Classes="ghost" Content="Open folder" Click="OnOpenFolder"/><StackPanel><TextBlock Text="Data folder" FontWeight="SemiBold"/><TextBlock Classes="sub mono" Text="{Binding DataFolder}"/></StackPanel></DockPanel>
+        </StackPanel></Border>
+        <WrapPanel><Button Classes="ghost" Content="{Binding ResetAllText}" Click="OnResetAll" Margin="0,0,8,0"/><Button Classes="ghost" Content="Quit PrintBridge" HorizontalAlignment="Left" Click="OnQuit"/></WrapPanel>
+      </StackPanel>
+
+      <!-- Toast -->
+      <Border IsVisible="{Binding HasToast}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Background="{DynamicResource Sidebar}" CornerRadius="9" Padding="16,10" Margin="0,0,0,6">
+        <TextBlock Text="{Binding ToastText}" Foreground="White"/>
+      </Border>
+    </Grid></ScrollViewer>
+  </Grid>
+</Window>

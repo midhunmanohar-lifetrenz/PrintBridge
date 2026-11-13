@@ -1,0 +1,306 @@
+<title>LTZ PrintBridge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: desktop-app window (sidebar + workspace + detail drawer), collapses to stacked panels on phones.
+   Palette: ink slate neutrals with a cool bias, ribbon-teal accent; status colours are separate from the accent. */
+:root{
+  --bg:#e9edee; --win:#f7f9f9; --panel:#ffffff; --sidebar:#16202a; --sidebar-fg:#b7c4cf; --sidebar-active:#223341;
+  --fg:#16202a; --muted:#5d6c78; --line:#d9e0e3; --accent:#0b7a75; --accent-fg:#ffffff; --accent-soft:#d7efec;
+  --ok:#17803d; --ok-soft:#dcf2e3; --warn:#a15c07; --warn-soft:#fbecd0; --bad:#b42318; --bad-soft:#fbe0dd;
+  --label:#fdfdfb; --label-ink:#101418; --shadow:0 1px 2px rgba(22,32,42,.08),0 8px 24px rgba(22,32,42,.08);
+  --font-body:"IBM Plex Sans",system-ui,sans-serif; --font-head:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif; --font-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c1117; --win:#121a22; --panel:#18222c; --sidebar:#0b1117; --sidebar-fg:#8fa1af; --sidebar-active:#1a2833;
+  --fg:#e6edf1; --muted:#8fa1af; --line:#26333f; --accent:#3cc3b9; --accent-fg:#06201e; --accent-soft:#12403d;
+  --ok:#52c27a; --ok-soft:#143a24; --warn:#e5a53f; --warn-soft:#3d2c0c; --bad:#f08075; --bad-soft:#431a16;
+  --label:#f4f4ef; --label-ink:#101418; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1117; --win:#121a22; --panel:#18222c; --sidebar:#0b1117; --sidebar-fg:#8fa1af; --sidebar-active:#1a2833;
+  --fg:#e6edf1; --muted:#8fa1af; --line:#26333f; --accent:#3cc3b9; --accent-fg:#06201e; --accent-soft:#12403d;
+  --ok:#52c27a; --ok-soft:#143a24; --warn:#e5a53f; --warn-soft:#3d2c0c; --bad:#f08075; --bad-soft:#431a16;
+  --label:#f4f4ef; --label-ink:#101418; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:14px;line-height:1.45;
+  padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button,input,select{font:inherit;color:inherit}
+.stage{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.intro{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.intro h1{font-family:var(--font-head);font-size:22px;margin:0;font-weight:700;letter-spacing:.01em}
+.intro p{margin:2px 0 0;color:var(--muted);max-width:62ch}
+.intro .tools{display:flex;gap:8px;flex-wrap:wrap}
+.window{background:var(--win);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.titlebar{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--panel);border-bottom:1px solid var(--line)}
+.dots{display:flex;gap:6px}.dots i{width:11px;height:11px;border-radius:50%;background:var(--line);display:block}
+.titlebar b{flex:1;text-align:center;font-weight:500;font-size:13px;color:var(--muted)}
+.app{display:grid;grid-template-columns:208px minmax(0,1fr);min-height:640px}
+.side{background:var(--sidebar);color:var(--sidebar-fg);display:flex;flex-direction:column;padding:14px 10px;gap:4px}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;color:#fff}
+.brand svg{flex:none}
+.brand b{font-family:var(--font-head);font-size:16px;letter-spacing:.02em;display:block;line-height:1.1}
+.brand small{display:block;color:var(--sidebar-fg);font-size:11px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;border:0;background:none;text-align:left;cursor:pointer;color:inherit;width:100%}
+.nav:hover{background:var(--sidebar-active)}
+.nav[aria-current="page"]{background:var(--sidebar-active);color:#fff;box-shadow:inset 3px 0 0 var(--accent)}
+.nav .n{margin-left:auto;font-family:var(--font-mono);font-size:11px;background:var(--sidebar-active);padding:1px 7px;border-radius:9px}
+.nav svg{width:18px;height:18px;flex:none}
+.side .spacer{flex:1}
+.bridge{margin:8px 4px 0;padding:10px;border:1px solid #2a3b49;border-radius:10px;font-size:12px;display:grid;gap:4px}
+.bridge .row{display:flex;justify-content:space-between;gap:8px}
+.bridge code{font-family:var(--font-mono);color:#dbe6ee}
+.main{padding:20px 22px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.head h2{font-family:var(--font-head);font-size:22px;margin:0;letter-spacing:.01em}
+.head p{margin:2px 0 0;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--panel);padding:7px 13px;border-radius:8px;cursor:pointer;font-weight:500;display:inline-flex;gap:7px;align-items:center}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn.danger{color:var(--bad)}
+.btn.sm{padding:4px 10px;font-size:13px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.view[hidden]{display:none}
+.split{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}
+.list{display:flex;flex-direction:column;gap:10px;min-width:0}
+.pcard{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;width:100%}
+.pcard:hover{border-color:var(--accent)}
+.pcard[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.badge-v{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-family:var(--font-head);font-weight:700;font-size:13px;letter-spacing:.04em;background:var(--sidebar);color:#fff}
+.pcard h3{margin:0;font-size:15px;font-weight:600;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.chip{font-family:var(--font-mono);font-size:11px;padding:2px 7px;border-radius:5px;border:1px solid var(--line);color:var(--muted);background:var(--win)}
+.chip.lang{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.pill{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.ok{color:var(--ok);background:var(--ok-soft)}.pill.warn{color:var(--warn);background:var(--warn-soft)}.pill.bad{color:var(--bad);background:var(--bad-soft)}
+.default-tag{font-size:11px;font-weight:600;color:var(--accent);border:1px solid var(--accent);border-radius:5px;padding:0 6px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+.panel h4{margin:0 0 10px;font-family:var(--font-head);font-size:15px;letter-spacing:.02em}
+.label-stage{background:repeating-linear-gradient(45deg,var(--win),var(--win) 8px,var(--line) 8px,var(--line) 9px);border-radius:8px;padding:16px;display:grid;place-items:center;border:1px solid var(--line)}
+.label{width:230px;background:var(--label);color:var(--label-ink);border-radius:3px;padding:12px 14px;box-shadow:0 2px 0 rgba(0,0,0,.18),0 10px 18px rgba(0,0,0,.14);font-family:var(--font-mono);font-size:11px;display:grid;gap:5px;position:relative}
+.label .big{font-family:var(--font-head);font-size:20px;font-weight:700;line-height:1.1}
+.label .bars{height:46px;display:flex;align-items:stretch;gap:0}
+.label .bars i{display:block;background:var(--label-ink)}
+.label .rowx{display:flex;justify-content:space-between;gap:8px}
+.label.printing::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--accent);animation:feed 1s linear forwards}
+@keyframes feed{to{top:calc(100% - 3px)}}
+@media (prefers-reduced-motion:reduce){.label.printing::after{animation:none}}
+dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:12px 0 0}
+dt{color:var(--muted)}dd{margin:0;font-family:var(--font-mono);font-size:12.5px;text-align:right;overflow-wrap:anywhere}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+pre.code{margin:12px 0 0;background:var(--sidebar);color:#cfe0ea;padding:10px 12px;border-radius:8px;font-family:var(--font-mono);font-size:11.5px;overflow:auto;max-height:150px}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:left;font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.mono,.mono{font-family:var(--font-mono);font-size:12.5px}
+tr:last-child td{border-bottom:0}
+.tablewrap{overflow-x:auto}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.hostrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.hostrow:last-child{border-bottom:0}
+.hostrow span{flex:1;min-width:0;overflow-wrap:anywhere;font-family:var(--font-mono);font-size:12.5px}
+.hostrow small{color:var(--muted);font-family:var(--font-body)}
+.addrow{display:flex;gap:8px;margin-top:12px}
+.addrow input{flex:1;min-width:0;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--win)}
+.empty{color:var(--muted);padding:14px 0}
+.setrow{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.setrow:last-child{border-bottom:0}
+.setrow b{font-weight:600;display:block}.setrow small{color:var(--muted)}
+.switch{appearance:none;width:40px;height:23px;border-radius:99px;background:var(--line);position:relative;cursor:pointer;flex:none;border:0}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:left .15s}
+.switch:checked{background:var(--accent)}.switch:checked::after{left:20px}
+.checks{display:grid;gap:8px}
+.check{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.check span:nth-child(2){flex:1}
+.check small{color:var(--muted);display:block}
+.filter{display:flex;gap:6px;flex-wrap:wrap}
+.filter button{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:3px 12px;cursor:pointer}
+.filter button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.modalback{position:fixed;inset:0;background:rgba(8,14,20,.55);display:grid;place-items:center;padding:16px;z-index:20}
+.modalback[hidden]{display:none}
+.modal{background:var(--panel);border-radius:14px;max-width:440px;width:100%;padding:22px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.modal h3{font-family:var(--font-head);font-size:19px;margin:0 0 6px}
+.modal .origin{font-family:var(--font-mono);background:var(--win);border:1px solid var(--line);padding:8px 10px;border-radius:8px;margin:10px 0;overflow-wrap:anywhere}
+.modal ul{margin:8px 0 14px;padding-left:18px;color:var(--muted)}
+.modal .actions{justify-content:flex-end}
+.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--sidebar);color:#fff;padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);z-index:30}
+.toast[hidden]{display:none}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat small{color:var(--muted);display:block}.stat b{font-family:var(--font-head);font-size:24px;font-variant-numeric:tabular-nums}
+@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr)}.two{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:720px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{flex-direction:row;flex-wrap:wrap;padding:10px}.brand{width:100%;padding-bottom:6px}.nav{width:auto;padding:7px 10px}.nav .n,.bridge{display:none}.side .spacer{display:none}
+  .main{padding:16px}.stats{grid-template-columns:minmax(0,1fr)}.pcard{grid-template-columns:44px minmax(0,1fr)}.pcard .pill{grid-column:2}
+}
+</style>
+
+<div class="stage">
+  <div class="intro">
+    <div>
+      <h1>LTZ PrintBridge &middot; UI prototype</h1>
+      <p>Interactive mock of the desktop app. Click printers, simulate a website request, add hosts, and send a test label. Printer names are examples.</p>
+    </div>
+    <div class="tools">
+      <button class="btn" id="simReq">Simulate site request</button>
+      <button class="btn" id="themeBtn">Toggle theme</button>
+    </div>
+  </div>
+
+  <div class="window">
+    <div class="titlebar"><div class="dots"><i></i><i></i><i></i></div><b>LTZ PrintBridge</b><span style="width:42px"></span></div>
+    <div class="app">
+      <aside class="side">
+        <div class="brand">
+          <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#0b7a75"/><rect x="8" y="8" width="18" height="11" rx="2" fill="#fff"/><rect x="11" y="21" width="12" height="6" rx="1" fill="#d7efec"/><path d="M12 12h10M12 15h6" stroke="#0b7a75" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div><b>PrintBridge</b><small>Label print service</small></div>
+        </div>
+        <button class="nav" data-view="printers" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 9V4h10v5M7 17H4v-7h16v7h-3M7 14h10v6H7z"/></svg>Printers<span class="n">5</span></button>
+        <button class="nav" data-view="hosts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.500-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Websites<span class="n" id="hostCount">7</span></button>
+        <button class="nav" data-view="jobs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h14v16H5zM8 9h8M8 13h8M8 17h5"/></svg>Print jobs</button>
+        <button class="nav" data-view="diag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Diagnostics</button>
+        <button class="nav" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>Settings</button>
+        <div class="spacer"></div>
+        <div class="bridge">
+          <div class="row"><span>Bridge</span><span style="color:#52c27a">&#9679; Running</span></div>
+          <div class="row"><span>Endpoint</span><code>127.0.0.1:17760</code></div>
+          <div class="row"><span>Version</span><code>1.0.0</code></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <!-- PRINTERS -->
+        <section class="view" id="v-printers">
+          <div class="head">
+            <div><h2>Printers</h2><p>Every printer a website can use. The default is what a site gets when it does not pick one.</p></div>
+            <div style="display:flex;gap:8px"><button class="btn" id="rescan">Scan again</button><button class="btn primary" id="addPrinter">Add printer</button></div>
+          </div>
+          <div class="stats" style="margin-bottom:16px">
+            <div class="stat"><small>Printers ready</small><b>4 of 5</b></div>
+            <div class="stat"><small>Labels today</small><b id="todayCount">248</b></div>
+            <div class="stat"><small>Sites allowed</small><b id="statHosts">7</b></div>
+          </div>
+          <div class="split">
+            <div class="list" id="plist"></div>
+            <aside class="panel" id="detail"></aside>
+          </div>
+        </section>
+
+        <!-- HOSTS -->
+        <section class="view" id="v-hosts" hidden>
+          <div class="head"><div><h2>Websites</h2><p>Only websites on the allowed list can see your printers or print. Unknown sites ask first.</p></div></div>
+          <div class="two">
+            <div class="panel"><h4>Allowed</h4><div id="allowed"></div>
+              <div class="addrow"><input id="newHost" placeholder="app.example.com" aria-label="Website to allow"><button class="btn primary" id="addHost">Allow</button></div></div>
+            <div class="panel"><h4>Blocked</h4><div id="blocked"></div></div>
+          </div>
+          <div class="panel" style="margin-top:16px"><h4>How a site is checked</h4>
+            <div class="checks">
+              <div class="check"><span class="pill ok">1</span><span>Website address is on the allowed list<small>Exact host match. No wildcards unless an admin turns them on.</small></span></div>
+              <div class="check"><span class="pill ok">2</span><span>Site holds a valid pairing token<small>Issued the first time you approve it. It expires after 30 days.</small></span></div>
+              <div class="check"><span class="pill ok">3</span><span>Request passes size and command limits<small>Payload cap 2 MB. No shell or file access commands exist.</small></span></div>
+            </div></div>
+        </section>
+
+        <!-- JOBS -->
+        <section class="view" id="v-jobs" hidden>
+          <div class="head"><div><h2>Print jobs</h2><p>Metadata only. Label content is never stored.</p></div>
+            <div class="filter" id="jobFilter"><button aria-pressed="true" data-f="all">All</button><button aria-pressed="false" data-f="Sent">Sent</button><button aria-pressed="false" data-f="Failed">Failed</button></div></div>
+          <div class="panel"><div class="tablewrap"><table><thead><tr><th>Time</th><th>Site</th><th>Printer</th><th>Language</th><th>Size</th><th>Result</th></tr></thead><tbody id="jobBody"></tbody></table></div></div>
+        </section>
+
+        <!-- DIAG -->
+        <section class="view" id="v-diag" hidden>
+          <div class="head"><div><h2>Diagnostics</h2><p>Run these before calling support.</p></div><div style="display:flex;gap:8px"><button class="btn" id="runDiag">Run checks</button><button class="btn">Export support bundle</button></div></div>
+          <div class="checks" id="diagList"></div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section class="view" id="v-settings" hidden>
+          <div class="head"><div><h2>Settings</h2><p>Defaults suit most clinics. Change only if IT asks you to.</p></div></div>
+          <div class="panel">
+            <div class="setrow"><div><b>Start when I sign in</b><small>Runs quietly in the system tray.</small></div><input type="checkbox" class="switch" checked aria-label="Start at sign in"></div>
+            <div class="setrow"><div><b>Search for network printers</b><small>Finds printers by broadcast on the local network.</small></div><input type="checkbox" class="switch" checked aria-label="Broadcast search"></div>
+            <div class="setrow"><div><b>Match installed Windows drivers</b><small>Lists printers that already have a driver installed.</small></div><input type="checkbox" class="switch" checked aria-label="Driver search"></div>
+            <div class="setrow"><div><b>Zebra Browser Print compatibility</b><small>Lets websites built for Zebra Browser Print work without changes. Turn off if Zebra Browser Print is also installed.</small></div><input type="checkbox" class="switch" checked aria-label="Zebra compatibility"></div>
+            <div class="setrow"><div><b>Allow USB direct printing</b><small>Bypasses the Windows spooler for supported printers.</small></div><input type="checkbox" class="switch" aria-label="USB direct"></div>
+            <div class="setrow"><div><b>Keep job history</b><small>Days of metadata to keep.</small></div><select aria-label="History days" style="padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--win)"><option>7 days</option><option selected>30 days</option><option>90 days</option></select></div>
+          </div>
+          <div style="margin-top:14px"><button class="btn danger" id="reset">Reset settings</button></div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+
+<div class="modalback" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+    <h3 id="mt">A website wants to use your printers</h3>
+    <div class="origin" id="mOrigin">https://qa.clinic.example</div>
+    <p style="margin:0">If you allow it, this site can:</p>
+    <ul><li>See the names of your printers</li><li>Send labels to them</li><li>Read printer status (paper out, offline)</li></ul>
+    <div class="actions"><button class="btn danger" id="mBlock">Block</button><button class="btn" id="mOnce">Allow once</button><button class="btn primary" id="mAllow">Always allow</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const printers=[
+ {id:1,v:"ZB",vendor:"Zebra",name:"ZD421 Pharmacy Desk",lang:"ZPL II",tr:"USB",dpi:"203 dpi",status:"ok",st:"Ready",def:true,media:"50 x 25 mm gap",fw:"V93.21.07",drv:"ZDesigner ZD421-203dpi",port:"USB001"},
+ {id:2,v:"TS",vendor:"TSC",name:"TE244 Lab Specimens",lang:"TSPL2",tr:"Network",dpi:"203 dpi",status:"ok",st:"Ready",media:"60 x 40 mm gap",fw:"V1.04.0",drv:"TSC TE244",port:"192.168.1.52:9100"},
+ {id:3,v:"TV",vendor:"TVS / SNBC",name:"LP46 Dlite BPLE Billing",lang:"BPLE (EPL-style)",tr:"Windows spooler",dpi:"203 dpi",status:"ok",st:"Ready",media:"75 x 50 mm gap",fw:"to be read",drv:"SNBC TVSE LP46 Dlite BPLE",port:"USB002"},
+ {id:4,v:"ZB",vendor:"Zebra",name:"ZT230 Wristbands",lang:"ZPL II",tr:"Network",dpi:"300 dpi",status:"warn",st:"Ribbon low",media:"25 x 250 mm continuous",fw:"V75.20.1Z",drv:"ZDesigner ZT230-300dpi",port:"192.168.1.60:9100"},
+ {id:5,v:"BR",vendor:"Brother",name:"QL-820NWB Reception",lang:"Raster / PDF",tr:"Windows spooler",dpi:"300 dpi",status:"bad",st:"Offline",media:"62 mm roll",fw:"1.17",drv:"Brother QL-820NWB",port:"USB003"}
+];
+const samples={"ZPL II":"^XA\n^PW400^LL200\n^FO20,20^A0N,36,36^FDRahul Menon^FS\n^FO20,70^BCN,60,Y^FD1000482^FS\n^XZ","TSPL2":"SIZE 60 mm,40 mm\nGAP 2 mm,0\nCLS\nTEXT 20,20,\"3\",0,1,1,\"Rahul Menon\"\nBARCODE 20,70,\"128\",60,1,0,2,2,\"1000482\"\nPRINT 1","BPLE (EPL-style)":"N\nq600\nQ400,24\nA20,20,0,3,1,1,N,\"Rahul Menon\"\nB20,70,0,1,2,5,60,B,\"1000482\"\nP1","Raster / PDF":"(PDF or image sent to the Windows driver)"};
+let sel=1;
+let allowed=["localhost","dev.clinic.example","qa.clinic.example","demo.hospital.example","uat.hospital.example","app.hospital.example","v2demo.ltz.one"];
+let blocked=[];
+const jobs=[["10:42:11","qa.clinic.example","ZD421 Pharmacy Desk","ZPL II","412 B","Sent"],["10:41:03","qa.clinic.example","TE244 Lab Specimens","TSPL2","380 B","Sent"],["10:38:50","app.hospital.example","LP46 Dlite BPLE Billing","BPLE","296 B","Sent"],["10:31:22","app.hospital.example","ZT230 Wristbands","ZPL II","540 B","Sent"],["10:12:07","demo.hospital.example","QL-820NWB Reception","PDF","48 KB","Failed: printer offline"],["09:58:41","qa.clinic.example","ZD421 Pharmacy Desk","ZPL II","412 B","Sent"]];
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function toast(t){const e=$("#toast");e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2400)}
+function bars(seed){let h="";let s=seed*9301+49297;for(let i=0;i<46;i++){s=(s*9301+49297)%233280;const w=1+Math.floor(s/233280*3.4);h+=`<i style="width:${i%2?1:w}px;${i%2?'background:transparent':''};margin-right:${i%2?w:0}px"></i>`}return h}
+function renderPrinters(){
+ $("#plist").innerHTML=printers.map(p=>`<button class="pcard" data-id="${p.id}" aria-pressed="${p.id===sel}"><div class="badge-v">${p.v}</div><div><h3>${p.name}${p.def?'<span class="default-tag">Default</span>':''}</h3><div class="meta"><span class="chip lang">${p.lang}</span><span class="chip">${p.tr}</span><span class="chip">${p.dpi}</span><span class="chip">${p.vendor}</span></div></div><span class="pill ${p.status}">${p.st}</span></button>`).join("");
+ $$(".pcard").forEach(b=>b.onclick=()=>{sel=+b.dataset.id;renderPrinters()});
+ const p=printers.find(x=>x.id===sel);
+ $("#detail").innerHTML=`<h4>${p.name}</h4>
+ <div class="label-stage"><div class="label" id="lbl"><div class="rowx"><span>${p.vendor.toUpperCase()}</span><span>${p.media.split(" ")[0]}&times;${p.media.split(" ")[2]||""} mm</span></div><div class="big">Rahul Menon</div><div class="rowx"><span>MRN 1000482</span><span>F / 34Y</span></div><div class="bars">${bars(p.id)}</div><div class="rowx"><span>1000482</span><span>22 Oct 2026</span></div></div></div>
+ <dl><dt>Status</dt><dd>${p.st}</dd><dt>Language</dt><dd>${p.lang}</dd><dt>Connection</dt><dd>${p.tr} &middot; ${p.port}</dd><dt>Label media</dt><dd>${p.media}</dd><dt>Firmware</dt><dd>${p.fw}</dd><dt>Driver</dt><dd>${p.drv}</dd></dl>
+ <pre class="code">${samples[p.lang].replace(/</g,"&lt;")}</pre>
+ <div class="actions"><button class="btn primary" id="tp" ${p.status==="bad"?"disabled":""}>Print test label</button><button class="btn" id="mkdef">Make default</button><button class="btn">Calibrate</button></div>`;
+ $("#tp").onclick=()=>{const l=$("#lbl");l.classList.remove("printing");void l.offsetWidth;l.classList.add("printing");toast("Test label sent to "+p.name);$("#todayCount").textContent=+$("#todayCount").textContent+1;jobs.unshift([new Date().toTimeString().slice(0,8),"PrintBridge test",p.name,p.lang.split(" ")[0],"296 B","Sent"]);renderJobs()};
+ $("#mkdef").onclick=()=>{printers.forEach(x=>x.def=x.id===p.id);renderPrinters();toast(p.name+" is now the default")};
+}
+function renderHosts(){
+ $("#allowed").innerHTML=allowed.length?allowed.map((h,i)=>`<div class="hostrow"><span>${h}</span><button class="btn sm" data-b="${i}">Block</button><button class="btn sm danger" data-d="${i}">Remove</button></div>`).join(""):'<div class="empty">No websites allowed yet.</div>';
+ $("#blocked").innerHTML=blocked.length?blocked.map((h,i)=>`<div class="hostrow"><span>${h}</span><button class="btn sm" data-u="${i}">Unblock</button></div>`).join(""):'<div class="empty">Nothing blocked. Sites you block appear here.</div>';
+ $$("[data-b]").forEach(b=>b.onclick=()=>{blocked.push(allowed.splice(+b.dataset.b,1)[0]);renderHosts()});
+ $$("[data-d]").forEach(b=>b.onclick=()=>{allowed.splice(+b.dataset.d,1);renderHosts()});
+ $$("[data-u]").forEach(b=>b.onclick=()=>{allowed.push(blocked.splice(+b.dataset.u,1)[0]);renderHosts()});
+ $("#hostCount").textContent=$("#statHosts").textContent=allowed.length;
+}
+let jf="all";
+function renderJobs(){
+ $("#jobBody").innerHTML=jobs.filter(j=>jf==="all"||j[5].startsWith(jf)).map(j=>`<tr><td class="mono">${j[0]}</td><td class="mono">${j[1]}</td><td>${j[2]}</td><td class="mono">${j[3]}</td><td class="mono">${j[4]}</td><td><span class="pill ${j[5]==="Sent"?"ok":"bad"}">${j[5]}</span></td></tr>`).join("");
+}
+const diag=[["Bridge service","Listening on 127.0.0.1:17760 only. Not reachable from the network.","ok","Pass"],["Secure connection","Local certificate is trusted by Chrome, Edge and Firefox.","ok","Pass"],["Safari","Certificate not trusted in Safari on this device.","warn","Fix"],["Printer discovery","5 printers found: 3 spooler, 2 network.","ok","Pass"],["Zebra compatibility port","Port 9100 is free. Zebra Browser Print not detected.","ok","Pass"],["Spooler","Windows Print Spooler is running.","ok","Pass"],["ZT230 Wristbands","Ribbon low reported by printer.","warn","Check"],["QL-820NWB Reception","Printer is offline. Check power and USB cable.","bad","Fail"]];
+function renderDiag(){$("#diagList").innerHTML=diag.map(d=>`<div class="check"><span class="pill ${d[2]}">${d[3]}</span><span><b style="font-weight:600">${d[0]}</b><small>${d[1]}</small></span></div>`).join("")}
+function show(v){$$(".view").forEach(s=>s.hidden=s.id!=="v-"+v);$$(".nav").forEach(n=>n.setAttribute("aria-current",n.dataset.view===v?"page":"false"))}
+$$(".nav").forEach(n=>n.onclick=()=>show(n.dataset.view));
+$("#jobFilter").onclick=e=>{const b=e.target.closest("button");if(!b)return;jf=b.dataset.f;$$("#jobFilter button").forEach(x=>x.setAttribute("aria-pressed",x===b));renderJobs()};
+$("#addHost").onclick=()=>{const v=$("#newHost").value.trim().toLowerCase();if(!v)return toast("Enter a website address");if(allowed.includes(v))return toast("Already allowed");allowed.push(v);$("#newHost").value="";renderHosts()};
+$("#runDiag").onclick=()=>{toast("Checks finished: 5 passed, 2 need attention, 1 failed")};
+$("#rescan").onclick=()=>toast("Scan complete: 5 printers found");
+$("#addPrinter").onclick=()=>toast("Add printer wizard opens here");
+$("#reset").onclick=()=>toast("Settings reset to defaults");
+const origins=["https://qa.clinic.example","https://new.clinic.example","https://unknown-site.example"];let oi=0;
+$("#simReq").onclick=()=>{$("#mOrigin").textContent=origins[oi++%origins.length];$("#modal").hidden=false;$("#mAllow").focus()};
+function host(){return $("#mOrigin").textContent.replace("https://","")}
+$("#mAllow").onclick=()=>{const h=host();if(!allowed.includes(h))allowed.push(h);renderHosts();$("#modal").hidden=true;toast(h+" allowed")};
+$("#mOnce").onclick=()=>{$("#modal").hidden=true;toast("Allowed for this session only")};
+$("#mBlock").onclick=()=>{const h=host();if(!blocked.includes(h))blocked.push(h);renderHosts();$("#modal").hidden=true;toast(h+" blocked")};
+$("#themeBtn").onclick=()=>{const r=document.documentElement;const dark=(r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches);r.dataset.theme=dark?"light":"dark"};
+renderPrinters();renderHosts();renderJobs();renderDiag();
+</script>

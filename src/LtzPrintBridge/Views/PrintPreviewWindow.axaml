@@ -1,0 +1,23 @@
+<Window RequestedThemeVariant="Light" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="LtzPrintBridge.Views.PrintPreviewWindow" Title="PrintBridge" Width="580" SizeToContent="Height" MaxHeight="820"
+        CanResize="False" WindowStartupLocation="CenterScreen" Topmost="True" Background="White" FontFamily="Inter, Segoe UI, sans-serif">
+  <StackPanel Margin="24" Spacing="12">
+    <TextBlock Text="Print preview" FontSize="20" FontWeight="Bold"/>
+    <TextBlock x:Name="Who" Foreground="#5D6C78" TextWrapping="Wrap"/>
+    <Border Background="#EEF1F3" BorderBrush="#D9E0E3" BorderThickness="1" CornerRadius="8" Padding="12">
+      <ScrollViewer MaxHeight="360" VerticalScrollBarVisibility="Auto">
+        <StackPanel x:Name="Labels" Spacing="12"/>
+      </ScrollViewer>
+    </Border>
+    <TextBlock x:Name="Note" Foreground="#5D6C78" FontSize="12" TextWrapping="Wrap"/>
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel VerticalAlignment="Center"><TextBlock x:Name="CopiesLabel" Text="Copies" FontWeight="SemiBold"/><TextBlock x:Name="CopiesHint" Foreground="#5D6C78" FontSize="12"/></StackPanel>
+      <NumericUpDown x:Name="Copies" Grid.Column="1" Minimum="1" Maximum="9999" Value="1" Increment="1" FormatString="0" Width="150" HorizontalAlignment="Right"/>
+    </Grid>
+    <CheckBox x:Name="SkipRest" Content="Do not ask again for this website for 2 minutes"/>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,6,0,0">
+      <Button Content="Cancel" Click="OnCancel" Background="White" BorderBrush="#D9E0E3" BorderThickness="1" Padding="16,9"/>
+      <Button x:Name="PrintButton" Content="Print" Click="OnPrint" Background="#0B7A75" Foreground="White" Padding="22,9" FontWeight="SemiBold"/>
+    </StackPanel>
+  </StackPanel>
+</Window>
