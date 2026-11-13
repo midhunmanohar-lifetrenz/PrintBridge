@@ -266,10 +266,30 @@ public sealed class JobManager
 
     /// <summary>The printer's answer to the last status question sent to it (Zebra-style read). Empty when there is none. Network printers only.</summary>
     public string TakeReply(string printerId) { lock (_replies) return _replies.Remove(printerId, out var r) ? r : ""; }
+    /// <summary>Stores an answer for the next read (used when PrintBridge answers a status question on the printer's behalf).</summary>
+    public void SetReply(string printerId, string reply) { lock (_replies) _replies[printerId] = reply; }
 
     // Commands that make a printer answer: ZPL ~HS ~HI ~HQ ~HM ~HD ^HH, Zebra settings (! U1 getvar, {}{...} JSON), TSPL <ESC>!? and <ESC>!S
     static readonly System.Text.RegularExpressions.Regex AskRx = new(@"~H[SIQMD]|\^HH|\x1B![?S]|!\s*U1\s+getvar|\{\}\s*\{", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
     static bool WantsReply(byte[] data) => data.Length <= 4096 && AskRx.IsMatch(Encoding.Latin1.GetString(data));
+
+    /// <summary>True when the data only asks the printer something (status, settings) and prints nothing, so it needs no preview and is not a job.</summary>
+    public static bool IsQuestion(byte[] data)
+    {
+        if (data.Length > 300) return false;
+        var t = Encoding.Latin1.GetString(data);
+        return AskRx.IsMatch(t) && !t.Contains("^FD", StringComparison.OrdinalIgnoreCase) && !t.Contains("^GF", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>Puts a question to a network printer, in turn with its jobs, and keeps the answer for the next read.</summary>
+    public async Task AskAsync(PrinterInfo p, byte[] question)
+    {
+        var sem = LockFor(p);
+        if (!await sem.WaitAsync(3000)) return;
+        try { SetReply(p.Id, Encoding.UTF8.GetString(await PrinterStatus.AskAsync(p.Address, question))); }
+        catch (Exception e) when (e is OperationCanceledException or SocketException or IOException) { SetReply(p.Id, ""); }
+        finally { sem.Release(); }
+    }
 
     /// <summary>Sends the job to a network printer. Connecting and sending have separate time limits. Returns the printer's answer when one was asked for.</summary>
     public static async Task<string?> SendTcp(string address, byte[] data, bool readReply = false)

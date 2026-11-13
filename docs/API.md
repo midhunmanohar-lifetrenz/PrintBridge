@@ -24,7 +24,7 @@ Safari must use HTTPS. Chrome and Edge also need the website's *Local network ac
 
 ### `GET /api/v1/status`
 ```json
-{ "name": "PrintBridge", "version": "1.2.0", "apiVersion": 1, "running": true, "printers": 2, "routeAllToDefault": false, "defaultPrinterAvailable": true }
+{ "name": "PrintBridge", "version": "1.2.1", "apiVersion": 1, "running": true, "printers": 2, "routeAllToDefault": false, "defaultPrinterAvailable": true }
 ```
 
 ### `GET /api/v1/printers`
@@ -116,13 +116,18 @@ const out = await r.json();
 | Call | Purpose |
 |---|---|
 | `GET /available` | `{ printer: [device...] }` |
-| `GET /default` | Default device, or empty `200` |
-| `POST /write` | `{ device: { uid | name }, data }` or `{ device, base64 }` for binary data. Errors are plain text: 400, 404, 409, 500, 503. |
+| `GET /default?type=printer` | Default device as JSON, or empty `200` (what `BrowserPrint.getDefaultDevice` reads) |
+| `GET /default` | The same device as text: a heading and six `key: value` lines separated by newline + tab (what older wrappers parse). The `uid` in this form is the printer name. |
+| `POST /write` | `{ device: { uid | name }, data }` or `{ device, base64 }` for binary data. A form with `json` and `blob` parts (`device.sendFile`) sends the file as it is. `{ device, url }` (`device.sendUrl`) answers `501`: PrintBridge does not download files for a website. Errors are plain text: 400, 404, 409, 500, 501, 503. |
 | `POST /read` | `{ device: { uid } }` returns the printer's answer to the last status question written to it (`~HS`, `~HI`, `~HQ`, `^HH`, TSPL `<ESC>!?`). Network printers only; empty for USB and driver printers. |
 
-| `GET /config` | Application information, as `BrowserPrint.getApplicationConfiguration()` expects. Field names follow the Zebra application from memory; not checked against the real library. |
+| `GET /config` | Application information with the fields `BrowserPrint.ApplicationConfiguration` defines (`version`, `build_number`, `api_level`, `platform`, `supportedConversions`). |
 | `POST /convert` | `501`: PDF and picture conversion (`convertAndSendFile`) is not supported. |
 
-`/read` also returns answers to Zebra settings questions written with `/write` (`! U1 getvar ...`, `{}{...}`), for network printers.
+`/read` also returns answers to Zebra settings questions written with `/write` (`! U1 getvar ...`, `{}{...}`), for network printers. Questions go straight to the printer: no preview window and no entry in the job list.
+
+**Status questions (`~HQES`, `~HS`) for printers that cannot be asked.** USB and driver printers have no return channel, and non-Zebra printers do not know the question. For these, PrintBridge sends nothing to the printer and answers `/read` itself, in the Zebra layout, from the status it has (see `printer-status` above). Pages that check `~HQES` before printing therefore work with USB, TSC and TVS printers too. Network printers set to ZPL are asked directly and their own answer is returned.
+
+Checked against `BrowserPrint-3.0.216.min.js` and `zebra-browser-print-wrapper` 0.1.4 by reading them and replaying their requests in the test suite (`ZebraLibraryTests`). The libraries were not run in a browser against PrintBridge.
 
 Device: `{ deviceType: "printer", uid, provider: "com.lifetrenz.printbridge", name, connection: "usb|network", version: 3, manufacturer }`.

@@ -187,7 +187,7 @@ public sealed class BridgeServer
                 case "GET /api/v1/printer-status": await ApiPrinterStatus(ctx); return;
                 case var jp when jp.StartsWith("GET /api/v1/jobs/", StringComparison.Ordinal): await ApiJob(ctx, jp["GET /api/v1/jobs/".Length..]); return;
                 case "GET /config": // Zebra Browser Print: getApplicationConfiguration()
-                    await Json(res, new { application = new { version = "1.3.2." + Version.Replace(".", ""), build_number = 0, api_level = 4, platform = OperatingSystem.IsMacOS() ? "macos" : "windows", supportedConversions = new { }, name = "PrintBridge", printBridgeVersion = Version } }); return;
+                    await Json(res, new { application = new { version = "1.3.2." + Version.Replace(".", ""), build_number = int.Parse(Version.Replace(".", "")), api_level = 4, platform = OperatingSystem.IsMacOS() ? "macos" : "windows", supportedConversions = new { }, name = "PrintBridge", printBridgeVersion = Version } }); return;
                 case "POST /convert": // Zebra Browser Print: convertAndSendFile() (PDF or picture to label). Not built.
                     res.StatusCode = 501; ctx.Items["note"] = "File conversion is not supported"; await res.WriteAsync("PrintBridge cannot convert PDF or picture files to label commands. Send printer commands instead."); return;
                 case "GET /available":
@@ -195,6 +195,8 @@ public sealed class BridgeServer
                 case "GET /default":
                     var d = _reg.DefaultPrinter();
                     if (d == null) { res.StatusCode = 200; return; }
+                    // Zebra's library asks with ?type=printer and expects JSON; without a type the Zebra application answers in text, which older wrappers parse.
+                    if (!req.Query.ContainsKey("type")) { res.ContentType = "text/plain; charset=utf-8"; await res.WriteAsync(ZebraEmulation.DefaultDeviceText(d)); return; }
                     await Json(res, Device(d)); return;
                 case "POST /write": await ZebraWrite(ctx, site); return;
                 case "POST /read": await ZebraRead(ctx); return;
@@ -232,27 +234,57 @@ public sealed class BridgeServer
         return JsonDocument.Parse(ms.ToArray());
     }
 
+    /// <summary>The printer a Zebra-style request names: by uid, else by name (wrappers that read the text form of /default send the name as uid).</summary>
+    PrinterInfo? ZebraDevice(JsonElement root)
+    {
+        string? uid = null, name = null;
+        if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("device", out var dev) && dev.ValueKind == JsonValueKind.Object)
+        {
+            if (dev.TryGetProperty("uid", out var u) && u.ValueKind == JsonValueKind.String) uid = u.GetString();
+            if (dev.TryGetProperty("name", out var n) && n.ValueKind == JsonValueKind.String) name = n.GetString();
+        }
+        return _reg.Resolve(uid) ?? _reg.Resolve(name);
+    }
+
     async Task ZebraWrite(HttpContext ctx, string site)
     {
-        using var doc = await Body(ctx);
-        var root = doc.RootElement;
-        string? uid = null, name = null;
-        if (root.TryGetProperty("device", out var dev) && dev.ValueKind == JsonValueKind.Object)
+        // BrowserPrint's device.sendFile() posts a form: "json" with the device and "blob" with the file, which goes to the printer as it is.
+        byte[]? file = null; JsonDocument doc;
+        if (ctx.Request.HasFormContentType)
         {
-            if (dev.TryGetProperty("uid", out var u)) uid = u.GetString();
-            if (dev.TryGetProperty("name", out var n)) name = n.GetString();
+            var form = await ctx.Request.ReadFormAsync(ctx.RequestAborted);
+            doc = JsonDocument.Parse(form["json"].ToString() is { Length: > 0 } j ? j : "{}");
+            var f = form.Files["blob"] ?? form.Files.FirstOrDefault() ?? throw new FormatException("The form has no file.");
+            using var ms = new MemoryStream(); await f.CopyToAsync(ms, ctx.RequestAborted); file = ms.ToArray();
         }
-        var p = _reg.Resolve(uid) ?? _reg.Resolve(name);
+        else doc = await Body(ctx);
+        using var _d = doc;
+        var root = doc.RootElement;
+        var p = ZebraDevice(root);
         if (p == null) { bool gone = _reg.DefaultMissing; ctx.Response.StatusCode = gone ? 503 : 404; await ctx.Response.WriteAsync(gone ? "The default printer is not connected." : "Printer not found"); return; }
-        var r = await _jobs.PrintAsync(p, Payload(root, p), site, 1, ctx.RequestAborted);
+        if (file == null && root.TryGetProperty("url", out _))
+        {
+            // device.sendUrl(): the Zebra application downloads the address itself. PrintBridge does not fetch addresses a website gives it.
+            ctx.Response.StatusCode = 501; ctx.Items["note"] = "sendUrl is not supported"; await ctx.Response.WriteAsync("PrintBridge does not download files for a website. Load the file in the page and use sendFile or send."); return;
+        }
+        // A status question to a printer that cannot be asked (USB or driver printer, or not a Zebra): answer from what the system knows, send nothing.
+        if (file == null && root.TryGetProperty("data", out var dd) && dd.ValueKind == JsonValueKind.String && ZebraEmulation.StatusQuestion(dd.GetString()!) is { } q
+            && (p.Transport == TransportKind.Spooler || p.Language != PrintLanguage.Zpl))
+        {
+            _jobs.SetReply(p.Id, ZebraEmulation.Answer(q, await _jobs.ReadStateAsync(p))); ctx.Items["note"] = "Status question answered by PrintBridge";
+            return;
+        }
+        var bytes = file ?? Payload(root, p);
+        // Questions to a network printer (status, settings) go straight to it: no preview window, no entry in the job list.
+        if (file == null && p.Transport == TransportKind.Tcp && JobManager.IsQuestion(bytes)) { await _jobs.AskAsync(p, bytes); ctx.Items["note"] = "Question passed to the printer"; return; }
+        var r = await _jobs.PrintAsync(p, bytes, site, 1, ctx.RequestAborted);
         if (!r.Ok) { ctx.Response.StatusCode = r.State == "cancelled" ? 409 : r.State == "rejected" ? 400 : 500; await ctx.Response.WriteAsync(r.Message); }
     }
 
     async Task ZebraRead(HttpContext ctx)
     {
         using var doc = await Body(ctx);
-        string? uid = doc.RootElement.TryGetProperty("device", out var dev) && dev.TryGetProperty("uid", out var u) ? u.GetString() : null;
-        var p = _reg.Resolve(uid);
+        var p = ZebraDevice(doc.RootElement);
         if (p == null) { ctx.Response.StatusCode = 404; return; }
         await ctx.Response.WriteAsync(_jobs.TakeReply(p.Id)); // the answer to the last status question written to this printer
     }

@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.1 (13 Nov 2026)
+
+Compatibility fixes found by reading Zebra's `BrowserPrint-3.0.216.min.js` and the common `zebra-browser-print-wrapper`, and replaying their requests in tests.
+
+- `GET /default` without `?type=` now answers in the Zebra text form, so the wrapper finds the default printer (it failed before).
+- A page that checks `~HQES` or `~HS` before printing now gets a correct answer for USB, driver and non-Zebra printers. Before, it got an empty answer and treated the printer as faulty, and the question was sent to the printer as if it were a label.
+- `device.sendFile()` (a form with the file) is accepted and the file is sent unchanged.
+- `device.sendUrl()` is refused with a clear message (PrintBridge does not download files for a website).
+- Status and settings questions to network printers no longer open the preview window or appear in the job list.
+- `/read` finds the printer by name as well as by id.
+
 ## 1.2.0 (13 Nov 2026)
 
 Functions that Zebra Browser Print and QZ Tray have and PrintBridge lacked. Tested with simulated printers only.

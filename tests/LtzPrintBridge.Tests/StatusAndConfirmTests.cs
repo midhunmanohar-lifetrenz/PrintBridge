@@ -38,7 +38,7 @@ public sealed class TalkingPrinter : IDisposable
                     int n; try { n = await ns.ReadAsync(buf, first.Token); } catch (OperationCanceledException) { continue; }
                     if (n == 0) continue; // a "are you switched on" probe
                     var data = buf[..n];
-                    bool question = Encoding.ASCII.GetString(data) == "~HS" || data.SequenceEqual(new byte[] { 0x1B, 0x21, 0x3F });
+                    bool question = Encoding.ASCII.GetString(data).StartsWith("~H") || data.SequenceEqual(new byte[] { 0x1B, 0x21, 0x3F });
                     if (question)
                     {
                         Interlocked.Increment(ref Questions);
