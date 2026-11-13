@@ -19,6 +19,19 @@ public class WindowsSpoolerTests
         var o = p.StandardOutput.ReadToEnd() + p.StandardError.ReadToEnd(); p.WaitForExit(60000); return o;
     }
 
+    /// <summary>
+    /// Creates a Windows printer for a test. Build machines often have the Print Spooler service switched off and no
+    /// "Generic / Text Only" driver, so both are set up first. The test is skipped, with the reason, when Windows still refuses.
+    /// </summary>
+    public static void CreatePrinter(string name, string port, string addPort)
+    {
+        var o = Ps("Set-Service Spooler -StartupType Manual; Start-Service Spooler; " +
+                   "if (-not (Get-PrinterDriver -Name 'Generic / Text Only' -ErrorAction SilentlyContinue)) { Add-PrinterDriver -Name 'Generic / Text Only' }; " +
+                   $"{addPort}; Add-Printer -Name '{name}' -DriverName 'Generic / Text Only' -PortName '{port}'; " +
+                   $"if (Get-Printer -Name '{name}' -ErrorAction SilentlyContinue) {{ 'PRINTER-READY' }}");
+        Skip.IfNot(o.Contains("PRINTER-READY"), "This Windows machine cannot create a test printer: " + o.Trim().Replace("\r", "").Replace("\n", " "));
+    }
+
     [SkippableFact]
     public async Task Raw_bytes_go_through_the_real_spooler_unchanged()
     {
@@ -27,7 +40,7 @@ public class WindowsSpoolerTests
         const string name = "LTZ Test Label Printer", port = "LTZTEST_PORT";
         try
         {
-            Ps($"Add-PrinterPort -Name {port} -PrinterHostAddress 127.0.0.1 -PortNumber {sink.Port}; Add-Printer -Name '{name}' -DriverName 'Generic / Text Only' -PortName {port}");
+            CreatePrinter(name, port, $"Add-PrinterPort -Name {port} -PrinterHostAddress 127.0.0.1 -PortNumber {sink.Port}");
 
             var q = WinSpool.List().SingleOrDefault(x => x.Name == name);
             Assert.NotNull(q);
@@ -51,7 +64,7 @@ public class WindowsSpoolerTests
         const string name = "LTZ Test BPLE Printer", port = "LTZTEST_PORT2";
         try
         {
-            Ps($"Add-PrinterPort -Name {port} -PrinterHostAddress 127.0.0.1 -PortNumber {sink.Port}; Add-Printer -Name '{name}' -DriverName 'Generic / Text Only' -PortName {port}");
+            CreatePrinter(name, port, $"Add-PrinterPort -Name {port} -PrinterHostAddress 127.0.0.1 -PortNumber {sink.Port}");
             var store = new SettingsStore(); var reg = new PrinterRegistry(store); await reg.RefreshAsync();
             var p = reg.Find("spool:" + name);
             Assert.NotNull(p);

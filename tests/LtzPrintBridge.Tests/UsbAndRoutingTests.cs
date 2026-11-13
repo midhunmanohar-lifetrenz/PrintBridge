@@ -54,7 +54,7 @@ public class UsbTests
         void Ps(string c) { var p = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("powershell.exe", $"-NoProfile -Command \"{c}\"") { RedirectStandardOutput = true, RedirectStandardError = true })!; p.StandardOutput.ReadToEnd(); p.WaitForExit(60000); }
         try
         {
-            Ps($"Add-PrinterPort -Name '{file}'; Add-Printer -Name '{name}' -DriverName 'Generic / Text Only' -PortName '{file}'");
+            WindowsSpoolerTests.CreatePrinter(name, file, $"Add-PrinterPort -Name '{file}'");
             var payload = new byte[] { 0x1B, 0x40, 0x4E, 0x0A, 0xFF, 0x00, 0x50, 0x31, 0x0A };
             WinSpool.WriteRaw(name, payload, "LTZ usb-like test");
             for (int i = 0; i < 100 && !(File.Exists(file) && new FileInfo(file).Length >= payload.Length); i++) await Task.Delay(200);
