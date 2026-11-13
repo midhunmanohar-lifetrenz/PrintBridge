@@ -4,11 +4,20 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with: { dotnet-version: '10.0.x' }
       - name: Test (unit, bridge, security, real Windows spooler)
         run: dotnet test tests/LtzPrintBridge.Tests --logger "trx;LogFileName=results.trx"
+      - name: List failed tests
+        if: failure()
+        shell: pwsh
+        run: |
+          [xml]$x = Get-Content tests/LtzPrintBridge.Tests/TestResults/results.trx
+          $x.TestRun.Results.UnitTestResult | Where-Object outcome -eq 'Failed' | ForEach-Object {
+            $m = ($_.Output.ErrorInfo.Message + ' | ' + $_.Output.ErrorInfo.StackTrace) -replace "`r?`n", ' ; '
+            Write-Output "::error title=$($_.testName)::$($m.Substring(0, [Math]::Min(900, $m.Length)))"
+          }
       - name: Publish EXE
         run: dotnet publish src/LtzPrintBridge -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=none -o dist
       - name: Installer round trip (install, check, uninstall)
