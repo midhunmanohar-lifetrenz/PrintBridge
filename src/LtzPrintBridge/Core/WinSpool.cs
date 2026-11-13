@@ -114,7 +114,39 @@ public static class WinSpool
         return ClassifyPort(port) == "File";
     }
 
-    public static void WriteRaw(string queue, byte[] data, string docName)
+    [DllImport("winspool.drv", EntryPoint = "GetJobW", SetLastError = true, CharSet = CharSet.Unicode)]
+    static extern bool GetJob(IntPtr h, int jobId, int level, IntPtr buf, int size, out int needed);
+
+    /// <summary>Looks the job up in the Windows queue. A job that is no longer there has been delivered to the printer port.</summary>
+    public static (string state, string message)? JobState(string queue, int jobId)
+    {
+        if (!OperatingSystem.IsWindows() || jobId <= 0) return null;
+        if (!OpenPrinter(queue, out var h, IntPtr.Zero)) return null;
+        try
+        {
+            GetJob(h, jobId, 1, IntPtr.Zero, 0, out int needed);
+            if (needed <= 0) return ("printed", "The job left the Windows print queue.");   // ERROR_INVALID_PARAMETER: no such job any more
+            var buf = Marshal.AllocHGlobal(needed);
+            try
+            {
+                if (!GetJob(h, jobId, 1, buf, needed, out _)) return ("printed", "The job left the Windows print queue.");
+                // JOB_INFO_1: JobId (padded to pointer size), six string pointers, then the Status flags
+                uint st = (uint)Marshal.ReadInt32(buf, IntPtr.Size * 7);
+                if ((st & 0x1080) != 0) return ("printed", "Windows reports the job as printed.");                     // PRINTED | COMPLETE
+                if ((st & 0x2) != 0) return ("attention", "Windows reports an error for this job.");
+                if ((st & 0x40) != 0) return ("attention", "Out of labels");
+                if ((st & 0x20) != 0) return ("attention", "The printer is offline.");
+                if ((st & 0x600) != 0) return ("attention", "The printer needs attention.");                           // BLOCKED_DEVQ | USER_INTERVENTION
+                if ((st & 0x1) != 0) return ("attention", "The job is paused in the Windows queue.");
+                return ("printing", "Waiting in the Windows print queue.");
+            }
+            finally { Marshal.FreeHGlobal(buf); }
+        }
+        finally { ClosePrinter(h); }
+    }
+
+    /// <returns>The Windows job number.</returns>
+    public static int WriteRaw(string queue, byte[] data, string docName)
     {
         if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("Windows spooler printing needs Windows.");
         if (!OpenPrinter(queue, out var h, IntPtr.Zero)) throw new IOException($"Cannot open printer '{queue}' (error {Marshal.GetLastWin32Error()}).");
@@ -122,7 +154,8 @@ public static class WinSpool
         {
             bool done = false;
             var di = new DOC_INFO_1 { pDocName = docName, pOutputFile = null, pDataType = "RAW" };
-            if (StartDocPrinter(h, 1, ref di) == 0) throw new IOException($"StartDocPrinter failed (error {Marshal.GetLastWin32Error()}).");
+            int job = StartDocPrinter(h, 1, ref di);
+            if (job == 0) throw new IOException($"StartDocPrinter failed (error {Marshal.GetLastWin32Error()}).");
             try
             {
                 if (!StartPagePrinter(h)) throw new IOException($"StartPagePrinter failed (error {Marshal.GetLastWin32Error()}).");
@@ -140,6 +173,7 @@ public static class WinSpool
                 finally { EndPagePrinter(h); }
             }
             finally { if (done) EndDocPrinter(h); else AbortPrinter(h); } // never release half a label to the printer
+            return job;
         }
         finally { ClosePrinter(h); }
     }

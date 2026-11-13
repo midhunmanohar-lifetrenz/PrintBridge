@@ -184,6 +184,12 @@ public sealed class BridgeServer
                 case "GET /api/v1/printers":
                     await Json(res, _reg.Visible().Select(p => new { id = p.Id, name = p.Name, vendor = p.Vendor, language = p.Language.ToString().ToLowerInvariant(), transport = p.Transport.ToString().ToLowerInvariant(), status = p.Status, isDefault = p.IsDefault })); return;
                 case "POST /api/v1/print": await ApiPrint(ctx, site); return;
+                case "GET /api/v1/printer-status": await ApiPrinterStatus(ctx); return;
+                case var jp when jp.StartsWith("GET /api/v1/jobs/", StringComparison.Ordinal): await ApiJob(ctx, jp["GET /api/v1/jobs/".Length..]); return;
+                case "GET /config": // Zebra Browser Print: getApplicationConfiguration()
+                    await Json(res, new { application = new { version = "1.3.2." + Version.Replace(".", ""), build_number = 0, api_level = 4, platform = OperatingSystem.IsMacOS() ? "macos" : "windows", supportedConversions = new { }, name = "PrintBridge", printBridgeVersion = Version } }); return;
+                case "POST /convert": // Zebra Browser Print: convertAndSendFile() (PDF or picture to label). Not built.
+                    res.StatusCode = 501; ctx.Items["note"] = "File conversion is not supported"; await res.WriteAsync("PrintBridge cannot convert PDF or picture files to label commands. Send printer commands instead."); return;
                 case "GET /available":
                     await Json(res, new { printer = _reg.Visible().Select(Device).ToArray() }); return;
                 case "GET /default":
@@ -266,11 +272,47 @@ public sealed class BridgeServer
                 : new { ok = false, error = "PRINTER_NOT_FOUND", message = "No printer with that id or name." });
             return;
         }
-        int copies = 1;
+        int copies = 1, wait = 0;
         if (root.TryGetProperty("copies", out var c) && !(c.ValueKind == JsonValueKind.Number && c.TryGetInt32(out copies))) throw new FormatException("\"copies\" must be a whole number.");
-        var r = await _jobs.PrintAsync(p, Payload(root, p), site, copies, ctx.RequestAborted);
+        if (root.TryGetProperty("waitSeconds", out var w) && !(w.ValueKind == JsonValueKind.Number && w.TryGetInt32(out wait) && wait is >= 0 and <= 30)) throw new FormatException("\"waitSeconds\" must be a whole number from 0 to 30.");
+        if (root.TryGetProperty("requireReady", out var rr) && rr.ValueKind == JsonValueKind.True)
+        {
+            var st = await _jobs.ReadStateAsync(p);
+            if (!st.Ready)
+            {
+                ctx.Response.StatusCode = 503; ctx.Items["note"] = "Printer not ready: " + st.Message;
+                await Json(ctx.Response, new { ok = false, error = "PRINTER_NOT_READY", message = st.Message, printer = p.Name, printerState = State(st) });
+                return;
+            }
+        }
+        var r = await _jobs.PrintAsync(p, Payload(root, p), site, copies, ctx.RequestAborted, wait * 1000);
         ctx.Response.StatusCode = r.Ok ? 200 : r.State switch { "cancelled" => 409, "rejected" => 400, _ => 502 };
-        await Json(ctx.Response, new { ok = r.Ok, printer = p.Name, jobId = r.JobId, state = r.State, message = r.Message, error = r.Ok ? null : r.State switch { "cancelled" => "PRINT_CANCELLED", "rejected" => "BAD_REQUEST", _ => "PRINT_FAILED" } });
+        await Json(ctx.Response, new { ok = r.Ok, printer = p.Name, jobId = r.JobId, state = r.State, confirmed = r.Confirmed, message = r.Message, error = r.Ok ? null : r.State switch { "cancelled" => "PRINT_CANCELLED", "rejected" => "BAD_REQUEST", _ => "PRINT_FAILED" } });
+    }
+
+    static object State(PrinterState s) => new { ready = s.Ready, state = s.State, message = s.Message, source = s.Source, issues = s.Issues, busy = s.Busy };
+
+    /// <summary>GET /api/v1/printer-status?printerId=...: what the printer reports right now (default printer when no id is given).</summary>
+    async Task ApiPrinterStatus(HttpContext ctx)
+    {
+        var id = ctx.Request.Query["printerId"].ToString(); if (id.Length == 0) id = ctx.Request.Query["printer"].ToString();
+        var p = _reg.Resolve(id.Length == 0 ? null : id);
+        if (p == null)
+        {
+            bool gone = _reg.DefaultMissing && (_store.Value.RouteAllToDefault || id.Length == 0);
+            ctx.Response.StatusCode = gone ? 503 : 404;
+            await Json(ctx.Response, new { ok = false, error = gone ? "DEFAULT_PRINTER_UNAVAILABLE" : "PRINTER_NOT_FOUND", message = gone ? "The default printer is not connected." : "No printer with that id or name." });
+            return;
+        }
+        var s = await _jobs.ReadStateAsync(p);
+        await Json(ctx.Response, new { ok = true, printer = p.Name, printerId = p.Id, ready = s.Ready, state = s.State, message = s.Message, source = s.Source, issues = s.Issues, busy = s.Busy });
+    }
+
+    /// <summary>GET /api/v1/jobs/{jobId}: how far a job got. Known for the last few hundred jobs since PrintBridge started.</summary>
+    async Task ApiJob(HttpContext ctx, string jobId)
+    {
+        if (_jobs.Status(jobId) is not { } j) { ctx.Response.StatusCode = 404; await Json(ctx.Response, new { ok = false, error = "JOB_NOT_FOUND", message = "No such job, or PrintBridge was restarted since." }); return; }
+        await Json(ctx.Response, new { ok = true, jobId = j.JobId, printer = j.Printer, state = j.State, confirmed = j.Confirmed, message = j.Message, source = j.Source, time = j.Time });
     }
 
     /// <summary>The bytes to print: "base64" as they are, or "data" text in the encoding the request or the printer setting names (UTF-8 otherwise).</summary>

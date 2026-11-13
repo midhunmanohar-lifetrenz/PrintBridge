@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.2.0 (13 Nov 2026)
+
+Functions that Zebra Browser Print and QZ Tray have and PrintBridge lacked. Tested with simulated printers only.
+
+### Added
+- **Printer status for websites:** `GET /api/v1/printer-status` reports ready, out of labels, out of ribbon, head open, paused, paper jam or offline. Network Zebra (ZPL) and TSC (TSPL) printers are asked directly; USB and driver printers report what Windows or macOS knows; other network printers report switched on or off.
+- **Refuse when not ready:** `"requireReady": true` on a print request sends nothing unless the printer is ready and returns the reason.
+- **Printed confirmation:** each job is followed for about 20 seconds. `"waitSeconds"` on a print request waits for the result; `GET /api/v1/jobs/{jobId}` reads it later. States: submitted, printing, printed, attention.
+- **Zebra Browser Print calls:** `/config` is answered; `/convert` answers "not supported" clearly; `/read` now also returns answers to Zebra settings questions.
+- Setting `FollowJobs` (settings.json) to switch the follow-up questions off.
+
+### Limits
+- USB and driver printers: "printed" means the job left the Windows or macOS queue, not that the printer confirmed it. Paper-out is only known if the driver reports it.
+- The Zebra and TSC status formats follow the programming manuals; not yet tried on real printers.
+- The real `BrowserPrint.js` file has still not been run against PrintBridge.
+
 ## 1.1.0 (13 Nov 2026)
 
 Fixes from the November 2026 review (`docs/Review_and_Test_Report.md`). Not yet run on Windows or on physical printers.

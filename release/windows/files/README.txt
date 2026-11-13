@@ -1,4 +1,4 @@
-PrintBridge 1.1.0
+PrintBridge 1.2.0
 Label printing for web applications. Windows 10 and 11, 64-bit. Works with Zebra (ZPL), TSC (TSPL), TVS / SNBC (BPLE, BPLZ, BPLB)
 and other label printers that accept raw commands.
 

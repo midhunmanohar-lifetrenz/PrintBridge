@@ -17,10 +17,18 @@ public static class Spool
     public static (string text, string level)? QueueStatus(string name) =>
         OperatingSystem.IsMacOS() ? CupsSpool.QueueStatus(name) : WinSpool.QueueStatus(name);
 
-    public static void WriteRaw(string queue, byte[] data, string docName)
+    /// <summary>Hands the job to the system queue. Returns the queue's own job number, used later to see whether the job has left the queue.</summary>
+    public static string? WriteRaw(string queue, byte[] data, string docName) =>
+        OperatingSystem.IsMacOS() ? CupsSpool.WriteRaw(queue, data, docName) : WinSpool.WriteRaw(queue, data, docName).ToString();
+
+    /// <summary>
+    /// Where a job is in the system queue: "printing" (still there), "printed" (it left the queue, so the system delivered
+    /// it to the printer) or "attention" (the queue reports a problem). Null when the system cannot tell.
+    /// </summary>
+    public static (string state, string message)? JobState(string queue, string job)
     {
-        if (OperatingSystem.IsMacOS()) CupsSpool.WriteRaw(queue, data, docName);
-        else WinSpool.WriteRaw(queue, data, docName);
+        try { return OperatingSystem.IsMacOS() ? CupsSpool.JobState(queue, job) : int.TryParse(job, out var id) ? WinSpool.JobState(queue, id) : null; }
+        catch (Exception e) { Log.Warn("Job state not available: " + e.Message); return null; }
     }
 
     static List<Item> WinList() => WinSpool.List().Select(q =>
@@ -161,9 +169,20 @@ public static class CupsSpool
         catch { return null; }
     }
 
-    public static void WriteRaw(string queue, byte[] data, string docName)
+    public static string? WriteRaw(string queue, byte[] data, string docName)
     {
         var (code, o) = Run("/usr/bin/lp", new[] { "-d", queue, "-o", "raw", "-t", docName }, data);
         if (code != 0) throw new IOException($"CUPS refused the job for '{queue}': {o.Trim()}");
+        var m = System.Text.RegularExpressions.Regex.Match(o, @"request id is (\S+)"); // "request id is Queue-123 (1 file(s))"
+        return m.Success ? m.Groups[1].Value : null;
+    }
+
+    public static (string state, string message)? JobState(string queue, string job)
+    {
+        var (code, o) = Run("/usr/bin/lpstat", new[] { "-W", "not-completed", "-o", queue });
+        if (code != 0) return null;
+        bool waiting = o.Split('\n').Any(l => l.StartsWith(job + " ", StringComparison.Ordinal));
+        if (!waiting) return ("printed", "The job left the print queue.");
+        return QueueStatus(queue) is { level: "bad" } q ? ("attention", q.text) : ("printing", "Waiting in the print queue.");
     }
 }

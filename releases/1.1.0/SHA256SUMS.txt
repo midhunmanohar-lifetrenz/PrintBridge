@@ -1,3 +1,0 @@
-58105b609f67493a606ff8955d56513e9532ea5b73c7da8bc1f5081e52c187ee  PrintBridge-1.1.0-mac-arm64.dmg
-5ea538d2cab25be6a267762b932beff72d6709074fbbb059f810f9bd388f058b  PrintBridge-1.1.0-mac-x64.dmg
-cbdd32e910e4b50ab54b14efca501359705767f9a3a3c4ccca42b8bec123265c  PrintBridge-1.1.0-win-x64.zip

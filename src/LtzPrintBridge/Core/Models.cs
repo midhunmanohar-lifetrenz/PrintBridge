@@ -54,6 +54,8 @@ public sealed class AppSettings
     public bool StartWithWindows { get; set; } = true;
     public int MaxPayloadKb { get; set; } = 2048;
     public bool CertificateTrustAsked { get; set; }
+    /// <summary>After a job, ask the printer (network Zebra and TSC) or the system queue whether it was printed. Turn off if a printer reacts badly to status questions.</summary>
+    public bool FollowJobs { get; set; } = true;
     /// <summary>Requests that carry no website name come from programs on this computer, not from a browser. Turn off on shared servers (Citrix, Remote Desktop).</summary>
     public bool AllowLocalPrograms { get; set; } = true;
     /// <summary>Text encoding per printer id for label text sent as a string (for example "windows-1252" or "cp850"). UTF-8 when absent.</summary>

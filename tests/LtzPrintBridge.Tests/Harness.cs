@@ -9,7 +9,11 @@ namespace LtzPrintBridge.Tests;
 static class TestEnv
 {
     [ModuleInitializer]
-    public static void Init() => Environment.SetEnvironmentVariable("LTZ_DATA_DIR", Path.Combine(Path.GetTempPath(), "ltz-tests-" + Guid.NewGuid().ToString("N")[..8]));
+    public static void Init()
+    {
+        Environment.SetEnvironmentVariable("LTZ_DATA_DIR", Path.Combine(Path.GetTempPath(), "ltz-tests-" + Guid.NewGuid().ToString("N")[..8]));
+        JobManager.DefaultConfirmDelaysMs = Array.Empty<int>(); // tests that follow a job to "printed" set ConfirmDelaysMs themselves
+    }
 }
 
 /// <summary>A fake network label printer: accepts connections and records every payload.</summary>
@@ -53,6 +57,7 @@ public sealed class BridgeFixture : IAsyncLifetime
     public SettingsStore Store { get; } = new();
     public PrinterRegistry Registry = default!;
     public HostGate Gate = default!;
+    public JobManager Jobs = default!;
     public BridgeServer Server = default!;
     public CertManager Certs { get; } = new();
     public int HttpPort, HttpsPort;
@@ -69,7 +74,7 @@ public sealed class BridgeFixture : IAsyncLifetime
         Store.Value.ManualPrinters.Add(new ManualPrinter { Name = "Fake Zebra", Host = "127.0.0.1", Port = Sink.Port, Vendor = "Zebra", Language = PrintLanguage.Zpl });
         Certs.Ensure();
         Registry = new PrinterRegistry(Store);
-        var jobs = new JobManager(Registry, Store);
+        var jobs = Jobs = new JobManager(Registry, Store);
         Gate = new HostGate(Store);
         Gate.Prompt = _ => Task.FromResult(HostDecision.Block);
         Server = new BridgeServer(Store, Registry, jobs, Gate, Certs);

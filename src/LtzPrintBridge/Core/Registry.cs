@@ -96,7 +96,77 @@ public sealed class JobManager
     public Func<string, (string text, string level)?> StatusProvider { get; set; } = Spool.QueueStatus;
     public JobManager(PrinterRegistry reg, SettingsStore store) { _reg = reg; _store = store; }
 
-    public sealed record Result(bool Ok, string JobId, string Message, string State);
+    public sealed record Result(bool Ok, string JobId, string Message, string State, bool Confirmed = false);
+
+    /// <summary>
+    /// How far a job got after it was handed over. State: submitted (handed over, nothing more known), printing,
+    /// printed, attention (the printer or queue reports a problem), failed, cancelled, rejected.
+    /// Confirmed is true once the printer itself (or, for driver printers, the system queue) said so.
+    /// </summary>
+    public sealed class JobStatus
+    {
+        public string JobId { get; init; } = ""; public string Printer { get; init; } = ""; public DateTime Time { get; init; } = DateTime.Now;
+        public string State { get; set; } = "submitted"; public string Message { get; set; } = ""; public bool Confirmed { get; set; }
+        public string Source { get; set; } = ""; // printer | system | none
+        internal Task Done = Task.CompletedTask;
+    }
+
+    readonly Dictionary<string, JobStatus> _status = new(); readonly Queue<string> _statusOrder = new();
+    const int KeepStatus = 300;
+    public JobStatus? Status(string jobId) { lock (_status) return _status.TryGetValue(jobId, out var s) ? s : null; }
+    JobStatus Remember(JobStatus s)
+    {
+        lock (_status) { _status[s.JobId] = s; _statusOrder.Enqueue(s.JobId); while (_statusOrder.Count > KeepStatus) _status.Remove(_statusOrder.Dequeue()); }
+        return s;
+    }
+
+    /// <summary>Reads the printer's state. Replaceable in tests.</summary>
+    public Func<PrinterInfo, Task<PrinterState>>? StateReader { get; set; }
+    /// <summary>Pauses between the checks that follow a job until it is printed (about 20 seconds in total).</summary>
+    public static int[] DefaultConfirmDelaysMs { get; set; } = { 400, 600, 1000, 1500, 2000, 2500, 3000, 3000, 3000, 3000 };
+    public int[] ConfirmDelaysMs { get; set; } = DefaultConfirmDelaysMs;
+
+    /// <summary>The printer's own answer when it can give one, otherwise the system queue or network state. Waits its turn behind a job that is being sent.</summary>
+    public async Task<PrinterState> ReadStateAsync(PrinterInfo p)
+    {
+        if (StateReader != null) return await StateReader(p);
+        var sem = LockFor(p);
+        if (!await sem.WaitAsync(3000)) return new PrinterState(true, "busy", "A print job is being sent or is waiting in the preview window.", "none", Array.Empty<string>(), true);
+        try { return await PrinterStatus.ReadAsync(p, StatusProvider); }
+        finally { sem.Release(); }
+    }
+
+    SemaphoreSlim LockFor(PrinterInfo p) { lock (_locks) { if (!_locks.TryGetValue(p.Id, out var sem)) _locks[p.Id] = sem = new(1, 1); return sem; } }
+
+    /// <summary>Follows a job after it was handed over, until the printer or the system queue says it is done, or time runs out.</summary>
+    async Task Confirm(JobStatus js, PrinterInfo p, string? queueJob)
+    {
+        try
+        {
+            if (!_store.Value.FollowJobs || ConfirmDelaysMs.Length == 0) return;
+            if (p.Transport == TransportKind.Tcp && p.Language is not (PrintLanguage.Zpl or PrintLanguage.Tspl)) { js.Message = "Sent. This printer cannot report when a label is finished."; return; }
+            foreach (var wait in ConfirmDelaysMs)
+            {
+                await Task.Delay(wait);
+                if (p.Transport == TransportKind.Spooler)
+                {
+                    if (queueJob == null || Spool.JobState(p.Address, queueJob) is not { } q) { js.Message = "Handed to the system print queue. It cannot report more."; return; }
+                    js.Source = "system"; js.State = q.state; js.Message = q.message; js.Confirmed = q.state == "printed";
+                    if (js.Confirmed) return;
+                }
+                else
+                {
+                    var st = await ReadStateAsync(p);
+                    if (st.Source != "printer") { js.Message = st.State == "offline" ? st.Message : "Sent. This printer cannot report when a label is finished."; if (st.State == "offline") js.State = "attention"; return; }
+                    js.Source = "printer";
+                    if (st.Issues.Count > 0) { js.State = "attention"; js.Message = st.Message; }
+                    else if (st.Busy) { js.State = "printing"; js.Message = "Printing"; }
+                    else { js.State = "printed"; js.Message = "The printer finished the job."; js.Confirmed = true; return; }
+                }
+            }
+        }
+        catch (Exception e) { Log.Warn("Could not follow job " + js.JobId + ": " + e.Message); }
+    }
 
     /// <summary>What the preview window is asked to show. Labels holds each ZPL label (empty for other languages); Text is the full job.</summary>
     public sealed record PrintReview(string Site, string Printer, string Language, string Text, IReadOnlyList<string> Labels, int Copies, bool PerLabel, PrintLanguage? Kind = null, CancellationToken Aborted = default);
@@ -139,12 +209,15 @@ public sealed class JobManager
         return (data, Math.Clamp(d.Copies, 1, MaxRepeats));
     }
 
-    public async Task<Result> PrintAsync(PrinterInfo p, byte[] data, string site, int copies = 1, CancellationToken aborted = default)
+    /// <param name="waitMs">How long to wait for the printer to finish before answering (0 = answer as soon as the job is handed over).</param>
+    public async Task<Result> PrintAsync(PrinterInfo p, byte[] data, string site, int copies = 1, CancellationToken aborted = default, int waitMs = 0)
     {
         var id = "job_" + Guid.NewGuid().ToString("N")[..8];
         var rec = new JobRecord { Id = id, Site = site, Printer = p.Name, Language = p.LanguageText, Bytes = data.Length };
-        SemaphoreSlim sem; lock (_locks) { if (!_locks.TryGetValue(p.Id, out sem!)) _locks[p.Id] = sem = new(1, 1); }
+        var sem = LockFor(p); var js = Remember(new JobStatus { JobId = id, Printer = p.Name });
+        JobStatus End(string state, string message) { js.State = state; js.Message = message; return js; }
         await sem.WaitAsync();
+        string? queueJob = null; bool sentAll = false;
         int sent = 0, times = 1;
         try
         {
@@ -158,14 +231,14 @@ public sealed class JobManager
             for (; sent < times; sent++)
             {
                 if (p.Transport == TransportKind.Tcp) { var reply = await SendTcp(p.Address, data, WantsReply(data)); if (reply != null) lock (_replies) _replies[p.Id] = reply; }
-                else await Task.Run(() => Spool.WriteRaw(p.Address, data, "PrintBridge " + id));
+                else queueJob = await Task.Run(() => Spool.WriteRaw(p.Address, data, "PrintBridge " + id));
             }
-            rec.Ok = true; rec.Result = "Sent";
-            return new Result(true, id, "Submitted to printer", "submitted");
+            rec.Ok = true; rec.Result = "Sent"; sentAll = true;
+            End("submitted", "Submitted to printer");
         }
         catch (CancelledException e)
         {
-            rec.Ok = false; rec.Result = "Cancelled";
+            rec.Ok = false; rec.Result = "Cancelled"; End("cancelled", e.Message);
             return new Result(false, id, e.Message, "cancelled");
         }
         catch (Exception e)
@@ -173,7 +246,8 @@ public sealed class JobManager
             var msg = sent > 0 ? $"{sent} of {times} copies were sent, then: {e.Message}" : e.Message;
             rec.Ok = false; rec.Result = "Failed: " + msg;
             Log.Error($"Print failed on {p.Name}", e);
-            return new Result(false, id, msg, e is ArgumentException ? "rejected" : "failed");
+            End(e is ArgumentException ? "rejected" : "failed", msg);
+            return new Result(false, id, msg, js.State);
         }
         finally
         {
@@ -181,6 +255,11 @@ public sealed class JobManager
             try { File.AppendAllText(AppPaths.Jobs, System.Text.Json.JsonSerializer.Serialize(rec) + Environment.NewLine); } catch { }
             JobDone?.Invoke(rec);
         }
+        // The job is with the printer or the system queue. Follow it in the background; the caller may wait for the outcome.
+        if (!sentAll) return new Result(false, id, js.Message, js.State);
+        js.Done = Confirm(js, p, queueJob);
+        if (waitMs > 0) await Task.WhenAny(js.Done, Task.Delay(waitMs));
+        return new Result(true, id, js.Message, js.State, js.Confirmed);
     }
 
     readonly Dictionary<string, string> _replies = new();
@@ -188,8 +267,8 @@ public sealed class JobManager
     /// <summary>The printer's answer to the last status question sent to it (Zebra-style read). Empty when there is none. Network printers only.</summary>
     public string TakeReply(string printerId) { lock (_replies) return _replies.Remove(printerId, out var r) ? r : ""; }
 
-    // Commands that make a printer answer: ZPL ~HS ~HI ~HQ ~HM ~HD ^HH, TSPL <ESC>!? and <ESC>!S
-    static readonly System.Text.RegularExpressions.Regex AskRx = new(@"~H[SIQMD]|\^HH|\x1B![?S]", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
+    // Commands that make a printer answer: ZPL ~HS ~HI ~HQ ~HM ~HD ^HH, Zebra settings (! U1 getvar, {}{...} JSON), TSPL <ESC>!? and <ESC>!S
+    static readonly System.Text.RegularExpressions.Regex AskRx = new(@"~H[SIQMD]|\^HH|\x1B![?S]|!\s*U1\s+getvar|\{\}\s*\{", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
     static bool WantsReply(byte[] data) => data.Length <= 4096 && AskRx.IsMatch(Encoding.Latin1.GetString(data));
 
     /// <summary>Sends the job to a network printer. Connecting and sending have separate time limits. Returns the printer's answer when one was asked for.</summary>

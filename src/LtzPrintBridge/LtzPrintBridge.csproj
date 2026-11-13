@@ -8,7 +8,7 @@
     <AssemblyName>PrintBridge</AssemblyName>
     <ApplicationIcon>Assets/icon.ico</ApplicationIcon>
     <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <InvariantGlobalization>true</InvariantGlobalization>
     <NoWarn>NU1903</NoWarn><SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>

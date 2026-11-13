@@ -1,4 +1,4 @@
-PrintBridge 1.1.0 for Mac
+PrintBridge 1.2.0 for Mac
 Label printing for web applications. macOS 12 or newer.
 
 INSTALL
