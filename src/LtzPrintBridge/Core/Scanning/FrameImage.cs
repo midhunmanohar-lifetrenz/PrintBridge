@@ -35,6 +35,9 @@ public static class FrameImage
         // Windows sends 32-bit pixels as B,G,R,X. The Mac camera sends A,R,G,B, whose always-full alpha byte would be
         // read as blue (a blue, odd-coloured picture). Tell them apart by which byte never changes.
         bool argb = bpp == 32 && IsArgb(d, offset, stride, width, height);
+        // Those Mac frames also store rows top to bottom although the header says bottom to top (a positive height),
+        // which turned the preview upside down.
+        if (argb) topDown = true;
 
         var bmp = new SKBitmap(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Opaque));
         var dest = new byte[width * 4];

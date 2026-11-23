@@ -184,7 +184,7 @@ public class FrameImageTests
     /// <summary>FlashCap hands over uncompressed frames as BMP; both row orders and both pixel sizes must read.</summary>
     /// <summary>The Mac camera sends A,R,G,B pixels; read as B,G,R,A they would turn blue.</summary>
     [Fact]
-    public void Reads_mac_argb_frames_in_the_right_colours()
+    public void Reads_mac_argb_frames_in_the_right_colours_and_the_right_way_up()
     {
         int w = 16, h = 16, stride = w * 4;
         var d = new byte[54 + stride * h];
@@ -202,10 +202,14 @@ public class FrameImageTests
             d[p + 2] = (byte)(120 + i % 7); // G
             d[p + 3] = 60;                  // B
         }
+        // first stored row marked green: the Mac stores rows top to bottom, so it must be the top of the picture
+        for (int x = 0; x < w; x++) { int p = 54 + x * 4; d[p + 1] = 0; d[p + 2] = 250; d[p + 3] = 0; }
         using var bmp = FrameImage.Decode(d)!;
         var c = bmp.GetPixel(5, 5);
         Assert.Equal(220, c.Red);
         Assert.Equal(60, c.Blue);
+        Assert.Equal(250, bmp.GetPixel(3, 0).Green);
+        Assert.NotEqual(250, bmp.GetPixel(3, h - 1).Green);
     }
 
     [Theory]
