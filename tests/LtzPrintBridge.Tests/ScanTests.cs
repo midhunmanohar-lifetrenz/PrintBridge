@@ -63,6 +63,8 @@ public class Gs1Tests
 
 public class FrameDecoderTests
 {
+    static FrameDecoderTests() => NativeReader.Register(); // these tests call the reader directly before any PrintBridge code runs
+
     /// <summary>Draws a code into a camera-sized grey frame, slightly off centre, and encodes it as a camera would (JPEG).</summary>
     static byte[] Frame(string text, BarcodeFormat format, string options = "", int scale = 4, int offsetX = 0)
     {
@@ -139,12 +141,75 @@ public class ScanWindowTests
 {
     /// <summary>Builds the window without showing it, so the camera never starts.</summary>
     [Avalonia.Headless.XUnit.AvaloniaFact]
-    public void Scan_window_loads_and_does_not_take_focus()
+    public void Scan_window_is_small_and_does_not_take_focus()
     {
         var w = new LtzPrintBridge.Views.ScanWindow();
         Assert.False(w.ShowActivated);
         Assert.True(w.Topmost);
+        Assert.True(w.Width <= 320 && w.Height <= 100);
         Assert.NotNull(Avalonia.Controls.ControlExtensions.FindControl<Avalonia.Controls.Image>(w, "Preview"));
-        Assert.Equal(3, Avalonia.Controls.ControlExtensions.FindControl<Avalonia.Controls.ComboBox>(w, "Gs1Box")!.ItemCount);
+        Assert.NotNull(Avalonia.Controls.ControlExtensions.FindControl<Avalonia.Controls.TextBlock>(w, "Value"));
+    }
+}
+
+public class FrameImageTests
+{
+    /// <summary>FlashCap hands over uncompressed frames as BMP; both row orders and both pixel sizes must read.</summary>
+    [Theory]
+    [InlineData(24, false)]
+    [InlineData(32, false)]
+    [InlineData(32, true)]
+    public void Reads_uncompressed_bmp_frames(int bpp, bool topDown)
+    {
+        int w = 4, h = 2, stride = (w * bpp / 8 + 3) & ~3;
+        var d = new byte[54 + stride * h];
+        d[0] = (byte)'B'; d[1] = (byte)'M';
+        BitConverter.GetBytes(d.Length).CopyTo(d, 2);
+        BitConverter.GetBytes(54).CopyTo(d, 10);
+        BitConverter.GetBytes(40).CopyTo(d, 14);
+        BitConverter.GetBytes(w).CopyTo(d, 18);
+        BitConverter.GetBytes(topDown ? -h : h).CopyTo(d, 22);
+        BitConverter.GetBytes((short)1).CopyTo(d, 26);
+        BitConverter.GetBytes((short)bpp).CopyTo(d, 28);
+        // first stored row: blue pixels; second: red
+        for (int x = 0; x < w; x++)
+        {
+            d[54 + x * bpp / 8] = 255;                 // blue in row 0
+            d[54 + stride + x * bpp / 8 + 2] = 255;    // red in row 1
+        }
+        using var bmp = FrameImage.Decode(d)!;
+        Assert.Equal(w, bmp.Width);
+        Assert.Equal(h, bmp.Height);
+        var top = bmp.GetPixel(0, 0);
+        // bottom-up BMPs store the last row first, so the first stored row (blue) is the bottom of the picture
+        if (topDown) Assert.Equal(255, top.Blue); else Assert.Equal(255, top.Red);
+        Assert.NotNull(FrameImage.Thumbnail(bmp, 96, 72));
+    }
+}
+
+/// <summary>Pictures of the scan strip for review. Runs only when LTZ_SCAN_SHOT points at a folder.</summary>
+public class ScanWindowScreenshots
+{
+    [Avalonia.Headless.XUnit.AvaloniaFact]
+    public void Capture_scan_strip()
+    {
+        var dir = Environment.GetEnvironmentVariable("LTZ_SCAN_SHOT");
+        if (string.IsNullOrEmpty(dir)) return;
+        Directory.CreateDirectory(dir);
+        LtzPrintBridge.Views.ScanWindow.CameraDisabled = true;
+        var shots = new (string file, string status, string value, string? detail)[]
+        {
+            ("scan-sent.png", "Sent ✓", "8901234567890", null),
+            ("scan-medicine.png", "Sent ✓", "(01)08901234567890(17)271231(10)AB12C", "Batch AB12C · Exp Dec 2027"),
+        };
+        foreach (var (file, status, value, detail) in shots)
+        {
+            var w = new LtzPrintBridge.Views.ScanWindow();
+            w.Show();
+            w.ShowForTest(status, value, detail);
+            for (int i = 0; i < 6; i++) { Avalonia.Threading.Dispatcher.UIThread.RunJobs(); Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick(); }
+            Avalonia.Headless.HeadlessWindowExtensions.CaptureRenderedFrame(w)!.Save(Path.Combine(dir, file));
+            w.Close();
+        }
     }
 }

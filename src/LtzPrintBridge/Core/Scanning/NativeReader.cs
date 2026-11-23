@@ -9,9 +9,13 @@ namespace LtzPrintBridge.Core.Scanning;
 /// because its file name clashes with ZXing.Net on Windows and the installer copies only PrintBridge.exe.
 /// On first use it is unpacked into the data folder under a name that includes its hash, then loaded from there.
 /// </summary>
-static class NativeReader
+public static class NativeReader
 {
     static int _registered;
+
+    /// <summary>Runs when PrintBridge's code is first loaded, so every use of the reader (not only FrameDecoder) finds it.</summary>
+    [System.Runtime.CompilerServices.ModuleInitializer]
+    internal static void Init() => Register();
 
     public static void Register()
     {

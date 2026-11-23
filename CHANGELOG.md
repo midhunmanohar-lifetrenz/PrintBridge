@@ -2,13 +2,16 @@
 
 ## 1.3.0 (test build, branch scan-test)
 
-- New: **Scan into active field** in the tray menu. Opens a small camera window that stays on top without taking
-  the focus from the web page. Each barcode or QR code it reads is typed into the field that has the cursor,
+- New: **Scan into active field** in the tray menu. Opens a small strip (300×84: camera thumbnail, last value,
+  batch and expiry, a settings menu and close) that stays on top in the bottom-right corner without taking the focus
+  from the web page; it can be dragged anywhere. Each barcode or QR code it reads is typed into the field that has the cursor,
   followed by Enter, Tab or nothing, like a USB scanner.
 - Medicine codes (GS1 DataMatrix, GS1-128, GS1 QR) are read into product code, batch, expiry and serial; expired
   stock is flagged in the window. The field receives the full code (bracketed or digits only) or the product code only.
 - Camera: FlashCap (Media Foundation / DirectShow on Windows, AVFoundation on macOS). Reader: zxing-cpp, embedded
   and unpacked to the data folder on first use (its file name clashes with ZXing.Net on Windows).
+- Uncompressed camera frames (BMP from FlashCap) are read directly; the first frame is logged, and a camera that
+  sends no picture within 5 s is reported (with the macOS camera permission state) instead of a black preview.
 - macOS asks for Camera and Accessibility permission. Not yet run on Windows or with a live camera.
 
 ## 1.2.1 (13 Nov 2026)
