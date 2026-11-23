@@ -2,7 +2,8 @@
 
 | File | For |
 |---|---|
-| `PrintBridge-1.3.0-win-x64.zip` | Windows 10 and 11 (64-bit). Extract and run `PrintBridge.exe`. |
+| `PrintBridge-1.3.0-win-x64.exe` | Windows 10 and 11 (64-bit). Download and run; it offers to install itself. |
+| `PrintBridge-1.3.0-win-x64.zip` | The same EXE with this README and a sample policy file. |
 | `PrintBridge-1.3.0-mac-arm64.dmg` | Mac with Apple silicon (M1 and later) |
 | `PrintBridge-1.3.0-mac-x64.dmg` | Mac with Intel processor |
 
