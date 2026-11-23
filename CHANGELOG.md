@@ -4,10 +4,13 @@
 
 - New: **Start scanner** in the tray menu (reads **Stop scanner** while open). Opens a thin strip (250×46: camera
   thumbnail, status with batch and expiry, last value) that stays on top in the bottom-right corner without taking the
-  focus from the web page. No buttons: drag to move, double-click to close, right-click for settings. Each barcode or QR code it reads is typed into the field that has the cursor,
+  focus from the web page. No buttons: drag to move, double-click to close, right-click for settings.
+- **Ctrl+Shift+S** anywhere starts the scanner, wakes it, or stops it (Windows RegisterHotKey, macOS Carbon hot key).
+- After a minute with no scans the camera sleeps (light off) and the strip stays: click it, the tray item or the
+  shortcut to wake it. A short beep on each scan (right-click › Beep on scan). The strip reopens where it was left. Each barcode or QR code it reads is typed into the field that has the cursor,
   followed by Enter, Tab or nothing, like a USB scanner.
-- Medicine codes (GS1 DataMatrix, GS1-128, GS1 QR) are read into product code, batch, expiry and serial; expired
-  stock is flagged in the window. The field receives the full code (bracketed or digits only) or the product code only.
+- Medicine codes (GS1 DataMatrix, GS1-128, GS1 QR) are read into product code, batch, expiry and serial; batch and
+  expiry are shown in the strip. The field receives the full code (bracketed or digits only) or the product code only.
 - Camera: FlashCap (Media Foundation / DirectShow on Windows, AVFoundation on macOS). Reader: zxing-cpp, embedded
   and unpacked to the data folder on first use (its file name clashes with ZXing.Net on Windows).
 - Uncompressed camera frames (BMP from FlashCap) are read directly; the first frame is logged, and a camera that

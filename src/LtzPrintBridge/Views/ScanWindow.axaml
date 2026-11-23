@@ -6,7 +6,7 @@
   <!-- A thin dark strip: camera thumbnail, status line and last value. Drag to move, double-click to close,
        right-click for settings. -->
   <Border x:Name="Shell" Background="#16202A" CornerRadius="10" Padding="4" BorderBrush="#2B3A46" BorderThickness="1"
-          PointerPressed="OnPointerPressed" ToolTip.Tip="Double-click to close · right-click for settings">
+          PointerPressed="OnPointerPressed" ToolTip.Tip="Double-click to close · right-click for settings · Ctrl+Shift+S">
     <Grid ColumnDefinitions="50,*" ColumnSpacing="8">
       <Border Grid.Column="0" CornerRadius="7" ClipToBounds="True" Background="#0B1218" Width="50" Height="36">
         <Grid>

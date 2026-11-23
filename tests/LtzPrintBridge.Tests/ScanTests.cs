@@ -152,6 +152,33 @@ public class ScanWindowTests
     }
 }
 
+public class ScanPrefsTests
+{
+    [Fact]
+    public void Beep_and_position_survive_a_restart()
+    {
+        var p = ScanPrefs.Load();
+        var keep = (p.Beep, p.X, p.Y);
+        try
+        {
+            p.Beep = false; p.X = 1234; p.Y = 567; p.Save();
+            var back = ScanPrefs.Load();
+            Assert.False(back.Beep);
+            Assert.Equal(1234, back.X);
+            Assert.Equal(567, back.Y);
+        }
+        finally { (p.Beep, p.X, p.Y) = keep; p.Save(); }
+    }
+
+    [Fact]
+    public void New_install_beeps_and_uses_the_corner()
+    {
+        var p = new ScanPrefs();
+        Assert.True(p.Beep);
+        Assert.Null(p.X);
+    }
+}
+
 public class FrameImageTests
 {
     /// <summary>FlashCap hands over uncompressed frames as BMP; both row orders and both pixel sizes must read.</summary>
@@ -228,6 +255,7 @@ public class ScanWindowScreenshots
             ("scan-sent.png", "Sent ✓", "8901234567890", null),
             ("scan-medicine.png", "Sent ✓", "(01)08901234567890(17)271231(10)AB12C", "Batch AB12C · Exp Dec 2027"),
             ("scan-scanning.png", "Scanning…", "—", null),
+            ("scan-sleeping.png", "Sleeping · click to scan", "8901234567890", null),
         };
         foreach (var (file, status, value, detail) in shots)
         {

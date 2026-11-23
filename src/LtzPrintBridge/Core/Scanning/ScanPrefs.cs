@@ -13,6 +13,10 @@ public sealed class ScanPrefs
     public string? Camera { get; set; }
     public ScanSuffix Suffix { get; set; } = ScanSuffix.Enter;
     public Gs1Output Gs1 { get; set; } = Gs1Output.Bracketed;
+    public bool Beep { get; set; } = true;
+    /// <summary>Where the strip was last left, in screen pixels; null means the bottom-right corner.</summary>
+    public int? X { get; set; }
+    public int? Y { get; set; }
 
     static string FilePath => Path.Combine(AppPaths.Dir, "scan.json");
 

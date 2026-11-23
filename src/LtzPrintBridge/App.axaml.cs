@@ -34,7 +34,7 @@ public sealed class LanguageNameConverter : IValueConverter
 
 public partial class App : Application
 {
-    MainViewModel? _vm; MainWindow? _win; TrayIcon? _tray; ScanWindow? _scan;
+    MainViewModel? _vm; MainWindow? _win; TrayIcon? _tray; ScanWindow? _scan; NativeMenuItem? _scanItem;
 
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
@@ -50,6 +50,7 @@ public partial class App : Application
             _vm.Jobs.Review = AskReview;
             _vm.QuitRequested += () => { _tray?.Dispose(); desktop.Shutdown(); };
             BuildTray();
+            Core.Scanning.ScanShortcut.Register(_win, ToggleScan);
             bool minimized = desktop.Args?.Contains("--minimized") == true;
             if (minimized) _win.ShowInTaskbar = true;
             _ = _vm.InitAsync();
@@ -63,7 +64,7 @@ public partial class App : Application
         try
         {
             var open = new NativeMenuItem("Open PrintBridge"); open.Click += (_, _) => ShowWindow();
-            var scan = new NativeMenuItem("Start scanner"); scan.Click += (_, _) => ToggleScan(scan);
+            var scan = _scanItem = new NativeMenuItem(ScanLabel(false)); scan.Click += (_, _) => ToggleScan();
             var quit = new NativeMenuItem("Quit"); quit.Click += (_, _) => _vm!.Quit();
             _tray = new TrayIcon
             {
@@ -102,16 +103,23 @@ public partial class App : Application
         return new WindowIcon(AssetLoader.Open(new Uri("avares://PrintBridge/Assets/" + name)));
     }
 
+    static string ScanLabel(bool open) => (open ? "Stop scanner" : "Start scanner") + $"    {Core.Scanning.ScanShortcut.Text}";
+
     /// <summary>
-    /// Start scanner opens the scan strip without taking the focus away from the web page; while it is open the same
-    /// menu item reads Stop scanner. The strip also closes on a double-click or after a minute with no scans.
+    /// Tray item and Ctrl+Shift+S: start the scan strip (without taking the focus from the web page), wake it when its
+    /// camera is sleeping, or stop it when it is scanning. While it is open the tray item reads Stop scanner.
     /// </summary>
-    void ToggleScan(NativeMenuItem item)
+    void ToggleScan()
     {
-        if (_scan != null) { _scan.Close(); return; }
+        if (_scan != null)
+        {
+            if (_scan.IsSleeping) _ = _scan.WakeAsync();
+            else _scan.Close();
+            return;
+        }
         _scan = new ScanWindow();
-        _scan.Closed += (_, _) => { _scan = null; item.Header = "Start scanner"; };
-        item.Header = "Stop scanner";
+        _scan.Closed += (_, _) => { _scan = null; if (_scanItem != null) _scanItem.Header = ScanLabel(false); };
+        if (_scanItem != null) _scanItem.Header = ScanLabel(true);
         _scan.Show();
     }
 

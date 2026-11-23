@@ -16,12 +16,13 @@ namespace LtzPrintBridge.Views;
 /// A small always-on-top strip (camera thumbnail + last value) that opens without taking the keyboard focus,
 /// has no buttons (drag to move, double-click to close, right-click for settings),
 /// so the web page field the user clicked stays active. Each code it reads is typed into that field,
-/// followed by Enter, Tab or nothing. It keeps scanning until closed, and closes itself after a minute with no scans.
+/// followed by Enter, Tab or nothing. After a minute with no scans the camera sleeps (light off) and the strip stays;
+/// a click, the tray item or Ctrl+Shift+S wakes it.
 /// </summary>
 public partial class ScanWindow : Window
 {
     static readonly TimeSpan RepeatWindow = TimeSpan.FromSeconds(3);
-    static readonly TimeSpan IdleClose = TimeSpan.FromSeconds(60);
+    static readonly TimeSpan IdleSleep = TimeSpan.FromSeconds(60);
     static readonly IBrush Muted = new SolidColorBrush(Color.Parse("#93A4B1"));
     static readonly IBrush Good = new SolidColorBrush(Color.Parse("#5EEAD4"));
     static readonly IBrush Warn = new SolidColorBrush(Color.Parse("#F5B94F"));
@@ -39,7 +40,10 @@ public partial class ScanWindow : Window
     bool _loggedFrame;
     volatile bool _paused;
     volatile bool _closed;
+    bool _sleeping;
     ScanResult? _pending;
+
+    public bool IsSleeping => _sleeping;
 
     T C<T>(string name) where T : Control => this.FindControl<T>(name)!;
 
@@ -50,11 +54,11 @@ public partial class ScanWindow : Window
     {
         InitializeComponent();
         _camera.Frame += OnFrame;
-        _idle = new DispatcherTimer { Interval = IdleClose };
-        _idle.Tick += (_, _) => Close();
+        _idle = new DispatcherTimer { Interval = IdleSleep };
+        _idle.Tick += async (_, _) => await SleepAsync();
         Opened += async (_, _) =>
         {
-            PlaceBottomRight();
+            Place();
             _idle.Start();
             if (!CameraDisabled) await LoadCamerasAsync();
         };
@@ -62,14 +66,24 @@ public partial class ScanWindow : Window
         {
             _closed = true;
             _idle.Stop();
+            _prefs.X = Position.X;
+            _prefs.Y = Position.Y;
+            _prefs.Save();
             _camera.Frame -= OnFrame;
             await _camera.StopAsync();
             (C<Image>("Preview").Source as IDisposable)?.Dispose();
         };
     }
 
-    void PlaceBottomRight()
+    /// <summary>Back where the user last left it, if that spot is still on a screen; otherwise the bottom-right corner.</summary>
+    void Place()
     {
+        if (_prefs.X is int x && _prefs.Y is int y &&
+            Screens.All.Any(sc => sc.WorkingArea.Contains(new PixelPoint(x + 10, y + 10)) && sc.WorkingArea.Contains(new PixelPoint(x + 60, y + 30))))
+        {
+            Position = new PixelPoint(x, y);
+            return;
+        }
         var screen = Screens.ScreenFromWindow(this) ?? Screens.Primary;
         if (screen == null) return;
         var area = screen.WorkingArea;
@@ -94,6 +108,32 @@ public partial class ScanWindow : Window
         d.Text = string.IsNullOrEmpty(detail) ? "" : "· " + detail;
         d.IsVisible = !string.IsNullOrEmpty(detail);
         d.Foreground = detailColor ?? Muted;
+    }
+
+    // ---------- sleep ----------
+
+    /// <summary>Switches the camera off (light off) but keeps the strip, so the next scan is one click away.</summary>
+    async Task SleepAsync()
+    {
+        if (_sleeping || _closed) return;
+        _sleeping = true;
+        _idle.Stop();
+        _paused = true;
+        await _camera.StopAsync();
+        C<Image>("Preview").Opacity = 0.35;
+        Show("Sleeping · click to scan", Muted);
+    }
+
+    /// <summary>Turns the camera back on after sleeping. Does nothing while already scanning.</summary>
+    public async Task WakeAsync()
+    {
+        if (!_sleeping || _closed) return;
+        _sleeping = false;
+        lock (_seen) _seen.Clear();
+        C<Image>("Preview").Opacity = 1;
+        _paused = _pending != null;
+        _idle.Start();
+        await StartCameraAsync(_cameraIndex);
     }
 
     // ---------- camera ----------
@@ -213,9 +253,7 @@ public partial class ScanWindow : Window
         var parts = new List<string>();
         if (g.Batch != null) parts.Add("Batch " + g.Batch);
         if (g.Expiry is { } exp) parts.Add("Exp " + exp.ToString("MMM yyyy", CultureInfo.InvariantCulture));
-        bool expired = g.IsExpired(DateOnly.FromDateTime(DateTime.Today));
-        if (expired) parts.Insert(0, "EXPIRED");
-        return (parts.Count > 0 ? string.Join(" · ", parts) : null, expired ? Bad : Muted);
+        return (parts.Count > 0 ? string.Join(" · ", parts) : null, Muted);
     }
 
     async Task DeliverAsync()
@@ -236,6 +274,7 @@ public partial class ScanWindow : Window
             await Task.Delay(250); // let the browser take the focus back before the keys arrive
             await Task.Run(() => KeyTyper.Type(text, _prefs.Suffix));
             Show("Sent ✓", Good, text, detail, detailColor);
+            if (_prefs.Beep) ScanBeep.Play();
             Log.Info($"Scan typed: {r.Format}, {text.Length} characters");
             _pending = null;
         }
@@ -269,6 +308,9 @@ public partial class ScanWindow : Window
                 _prefs.Camera = c.Name;
                 _ = StartCameraAsync(i);
             })).ToArray()));
+        var beep = new MenuItem { Header = "Beep on scan", ToggleType = MenuItemToggleType.CheckBox, IsChecked = _prefs.Beep };
+        beep.Click += (_, _) => { _prefs.Beep = !_prefs.Beep; _prefs.Save(); };
+        menu.Items.Add(beep);
         menu.Items.Add(new Separator());
         var again = new MenuItem { Header = "Type again", IsEnabled = _pending != null };
         again.Click += async (_, _) => await DeliverAsync();
@@ -305,7 +347,7 @@ public partial class ScanWindow : Window
 
     DateTime _lastPress;
 
-    /// <summary>Left: drag to move, double-click to close. Right: settings.</summary>
+    /// <summary>Left: drag to move (or wake when sleeping), double-click to close. Right: settings.</summary>
     void OnPointerPressed(object? s, PointerPressedEventArgs e)
     {
         var props = e.GetCurrentPoint(this).Properties;
@@ -316,6 +358,7 @@ public partial class ScanWindow : Window
         bool doubleClick = e.ClickCount >= 2 || now - _lastPress < TimeSpan.FromMilliseconds(450);
         _lastPress = now;
         if (doubleClick) { Close(); e.Handled = true; return; }
+        if (_sleeping) { _ = WakeAsync(); e.Handled = true; return; }
         BeginMoveDrag(e);
     }
 }
