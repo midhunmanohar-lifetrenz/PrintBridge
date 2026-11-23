@@ -64,7 +64,8 @@ public partial class App : Application
         try
         {
             var open = new NativeMenuItem("Open PrintBridge"); open.Click += (_, _) => ShowWindow();
-            var scan = _scanItem = new NativeMenuItem(ScanLabel(false)); scan.Click += (_, _) => ToggleScan();
+            var scan = _scanItem = new NativeMenuItem(ScanLabel(false)) { ToolTip = "Shortcut: " + Core.Scanning.ScanShortcut.Text }; // shown on hover only
+            scan.Click += (_, _) => ToggleScan();
             var quit = new NativeMenuItem("Quit"); quit.Click += (_, _) => _vm!.Quit();
             _tray = new TrayIcon
             {
@@ -103,7 +104,7 @@ public partial class App : Application
         return new WindowIcon(AssetLoader.Open(new Uri("avares://PrintBridge/Assets/" + name)));
     }
 
-    static string ScanLabel(bool open) => (open ? "Stop scanner" : "Start scanner") + $"    {Core.Scanning.ScanShortcut.Text}";
+    static string ScanLabel(bool open) => open ? "Stop scanner" : "Start scanner";
 
     /// <summary>
     /// Tray item and Ctrl+Shift+S: start the scan strip (without taking the focus from the web page), wake it when its
