@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.0 (test build, branch scan-test)
+## 1.3.0
 
 - New: **Start scanner** in the tray menu (reads **Stop scanner** while open). Opens a thin strip (250×46: camera
   thumbnail, status with batch and expiry, last value) that stays on top in the bottom-right corner without taking the
@@ -15,7 +15,7 @@
   and unpacked to the data folder on first use (its file name clashes with ZXing.Net on Windows).
 - Uncompressed camera frames (BMP from FlashCap) are read directly; the first frame is logged, and a camera that
   sends no picture within 5 s is reported (with the macOS camera permission state) instead of a black preview.
-- macOS asks for Camera and Accessibility permission. Not yet run on Windows or with a live camera.
+- macOS asks for Camera and Accessibility permission. Tested with a live camera on macOS (Apple silicon); not yet run on Windows.
 
 ## 1.2.1 (13 Nov 2026)
 
