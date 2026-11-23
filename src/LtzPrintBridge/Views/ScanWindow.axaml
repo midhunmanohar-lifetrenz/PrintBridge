@@ -1,0 +1,65 @@
+<Window RequestedThemeVariant="Light" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="LtzPrintBridge.Views.ScanWindow" Title="PrintBridge · Scan" Width="380" SizeToContent="Height"
+        CanResize="False" Topmost="True" ShowActivated="False" ShowInTaskbar="False"
+        Background="White" FontFamily="Inter, Segoe UI, sans-serif" FontSize="13">
+  <StackPanel Margin="16" Spacing="10">
+    <Border CornerRadius="12" ClipToBounds="True" Background="#101418" Height="255">
+      <Grid>
+        <Image x:Name="Preview" Stretch="UniformToFill"/>
+        <!-- scan frame corners -->
+        <Border BorderBrush="White" BorderThickness="0" Margin="40,50">
+          <Grid>
+            <Border Width="26" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="White" BorderThickness="3,3,0,0" CornerRadius="8,0,0,0"/>
+            <Border Width="26" Height="26" HorizontalAlignment="Right" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,3,3,0" CornerRadius="0,8,0,0"/>
+            <Border Width="26" Height="26" HorizontalAlignment="Left" VerticalAlignment="Bottom" BorderBrush="White" BorderThickness="3,0,0,3" CornerRadius="0,0,0,8"/>
+            <Border Width="26" Height="26" HorizontalAlignment="Right" VerticalAlignment="Bottom" BorderBrush="White" BorderThickness="0,0,3,3" CornerRadius="0,0,8,0"/>
+          </Grid>
+        </Border>
+        <TextBlock x:Name="Overlay" Foreground="#E6EDF0" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="24,0" Text="Starting camera…"/>
+      </Grid>
+    </Border>
+
+    <TextBlock x:Name="Status" TextWrapping="Wrap" Foreground="#5D6C78" Text="Keep your cursor in the web page field, then hold the barcode in front of the camera."/>
+
+    <Border x:Name="ResultBox" IsVisible="False" Background="#EEF8F7" BorderBrush="#BFE3DF" BorderThickness="1" CornerRadius="10" Padding="12,10">
+      <StackPanel Spacing="4">
+        <TextBlock x:Name="ResultTitle" FontWeight="SemiBold" Foreground="#0B7A75" Text="Sent to the web page"/>
+        <TextBlock x:Name="ResultValue" FontFamily="Consolas, Menlo, monospace" FontSize="15" TextWrapping="Wrap"/>
+        <TextBlock x:Name="ResultDetail" Foreground="#5D6C78" TextWrapping="Wrap"/>
+        <TextBlock x:Name="ResultWarn" Foreground="#B42318" FontWeight="SemiBold" TextWrapping="Wrap" IsVisible="False"/>
+      </StackPanel>
+    </Border>
+
+    <Border x:Name="PermissionBox" IsVisible="False" Background="#FBECD0" CornerRadius="10" Padding="12,10">
+      <StackPanel Spacing="8">
+        <TextBlock TextWrapping="Wrap" Foreground="#5B3A06" Text="macOS needs your permission before PrintBridge can type into other apps. Turn on PrintBridge under Privacy &amp; Security › Accessibility, then press Type again."/>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button Content="Open Accessibility settings" Click="OnOpenAccessibility" Background="White" BorderBrush="#D9E0E3" BorderThickness="1" Padding="10,6"/>
+          <Button Content="Type again" Click="OnTypeAgain" Background="#0B7A75" Foreground="White" Padding="10,6"/>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+
+    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="8">
+      <TextBlock Grid.Row="0" Text="Camera" VerticalAlignment="Center" Foreground="#5D6C78"/>
+      <ComboBox Grid.Row="0" Grid.Column="1" x:Name="CameraBox" HorizontalAlignment="Stretch" SelectionChanged="OnCameraChanged"/>
+      <TextBlock Grid.Row="1" Text="Then press" VerticalAlignment="Center" Foreground="#5D6C78"/>
+      <ComboBox Grid.Row="1" Grid.Column="1" x:Name="SuffixBox" HorizontalAlignment="Stretch" SelectionChanged="OnPrefChanged">
+        <ComboBoxItem Content="Enter"/>
+        <ComboBoxItem Content="Tab"/>
+        <ComboBoxItem Content="Nothing"/>
+      </ComboBox>
+      <TextBlock Grid.Row="2" Text="Medicine code" VerticalAlignment="Center" Foreground="#5D6C78"/>
+      <ComboBox Grid.Row="2" Grid.Column="1" x:Name="Gs1Box" HorizontalAlignment="Stretch" SelectionChanged="OnPrefChanged">
+        <ComboBoxItem Content="Full code, as printed: (01)…(17)…"/>
+        <ComboBoxItem Content="Full code, digits only: 01…17…"/>
+        <ComboBoxItem Content="Product code (GTIN) only"/>
+      </ComboBox>
+    </Grid>
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+      <Button x:Name="AgainButton" Content="Scan again" Click="OnScanAgain" IsVisible="False" Background="White" BorderBrush="#D9E0E3" BorderThickness="1" Padding="14,8"/>
+      <Button Content="Close" Click="OnClose" Background="White" BorderBrush="#D9E0E3" BorderThickness="1" Padding="14,8"/>
+    </StackPanel>
+  </StackPanel>
+</Window>

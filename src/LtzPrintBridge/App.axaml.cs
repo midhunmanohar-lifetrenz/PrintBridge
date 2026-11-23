@@ -34,7 +34,7 @@ public sealed class LanguageNameConverter : IValueConverter
 
 public partial class App : Application
 {
-    MainViewModel? _vm; MainWindow? _win; TrayIcon? _tray;
+    MainViewModel? _vm; MainWindow? _win; TrayIcon? _tray; ScanWindow? _scan;
 
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
@@ -63,12 +63,13 @@ public partial class App : Application
         try
         {
             var open = new NativeMenuItem("Open PrintBridge"); open.Click += (_, _) => ShowWindow();
+            var scan = new NativeMenuItem("Scan into active field"); scan.Click += (_, _) => ShowScan();
             var quit = new NativeMenuItem("Quit"); quit.Click += (_, _) => _vm!.Quit();
             _tray = new TrayIcon
             {
                 Icon = TrayGlyph(),
                 ToolTipText = "PrintBridge: running",
-                Menu = new NativeMenu { open, new NativeMenuItemSeparator(), quit }
+                Menu = new NativeMenu { scan, new NativeMenuItemSeparator(), open, new NativeMenuItemSeparator(), quit }
             };
             if (OperatingSystem.IsMacOS()) MacOSProperties.SetIsTemplateIcon(_tray, true); // the menu bar tints it for light, dark and wallpaper colours
             _tray.Clicked += (_, _) => ShowWindow();
@@ -76,6 +77,10 @@ public partial class App : Application
             // Windows has no template images: switch between a black and a white glyph when the taskbar theme changes.
             if (OperatingSystem.IsWindows())
             {
+                // Remember the window the user works in, so a scan picked from the tray menu is typed back into it.
+                var focus = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
+                focus.Tick += (_, _) => Core.Scanning.KeyTyper.TrackForeground();
+                focus.Start();
                 var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(20) };
                 timer.Tick += (_, _) => { if (_tray != null) _tray.Icon = TrayGlyph(); };
                 timer.Start();
@@ -95,6 +100,15 @@ public partial class App : Application
         }
         var name = OperatingSystem.IsMacOS() || light ? "tray-black.png" : "tray-white.png";
         return new WindowIcon(AssetLoader.Open(new Uri("avares://PrintBridge/Assets/" + name)));
+    }
+
+    /// <summary>Opens the scanner without taking the focus away from the web page; a second click brings the open one forward.</summary>
+    void ShowScan()
+    {
+        if (_scan != null) { _scan.Topmost = false; _scan.Topmost = true; return; }
+        _scan = new ScanWindow();
+        _scan.Closed += (_, _) => _scan = null;
+        _scan.Show();
     }
 
     void ShowWindow() { if (_win == null) return; _win.Show(); if (_win.WindowState == WindowState.Minimized) _win.WindowState = WindowState.Normal; _win.Activate(); }

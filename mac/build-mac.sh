@@ -37,6 +37,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>LSMinimumSystemVersion</key><string>12.0</string>
   <key>NSHighResolutionCapable</key><true/>
+  <key>NSCameraUsageDescription</key><string>PrintBridge uses the camera to read barcodes and QR codes and type them into your web page. Images are not saved.</string>
   <key>NSLocalNetworkUsageDescription</key><string>PrintBridge sends labels to network printers on your local network.</string>
   <key>NSHumanReadableCopyright</key><string>Lifetrenz</string>
 </dict></plist>

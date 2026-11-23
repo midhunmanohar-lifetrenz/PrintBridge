@@ -8,7 +8,7 @@
     <AssemblyName>PrintBridge</AssemblyName>
     <ApplicationIcon>Assets/icon.ico</ApplicationIcon>
     <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
-    <Version>1.2.1</Version>
+    <Version>1.3.0</Version>
     <InvariantGlobalization>true</InvariantGlobalization>
     <NoWarn>NU1903</NoWarn><SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
@@ -18,9 +18,21 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.9" />
+    <PackageReference Include="FlashCap" Version="1.13.0" />
     <PackageReference Include="ZXing.Net" Version="0.16.9" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.9" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.9" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.9" />
+    <PackageReference Include="ZXingCpp" Version="0.5.3" ExcludeAssets="native" GeneratePathProperty="true" />
+  </ItemGroup>
+  <!-- ZXingCpp's native library is called ZXing.dll, which on Windows clashes with ZXing.Net's zxing.dll (used for label
+       previews), and the Windows installer copies only PrintBridge.exe. So the native file is left out of the output and
+       embedded instead; NativeReader unpacks it into the data folder on first use. -->
+  <PropertyGroup>
+    <ZxNativeRid>$(RuntimeIdentifier)</ZxNativeRid>
+    <ZxNativeRid Condition="'$(ZxNativeRid)' == ''">$(NETCoreSdkRuntimeIdentifier)</ZxNativeRid>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(PkgZXingCpp)/runtimes/$(ZxNativeRid)/native/*" LogicalName="zxingcpp-native" />
   </ItemGroup>
 </Project>
