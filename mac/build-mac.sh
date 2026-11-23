@@ -74,4 +74,7 @@ if [ -n "${NOTARY_PROFILE:-}" ] && [ "$IDENTITY" != "-" ]; then
   spctl -a -vvv -t install "$DMG" || true
   xcrun stapler validate "$DMG" || true
 fi
+# Remove the build folder (app copy, publish output, DMG staging) so only the DMG is left and Spotlight does not list
+# several PrintBridge apps. KEEP_APP=1 keeps it, e.g. to run the app straight from dist/.
+[ "${KEEP_APP:-0}" = "1" ] || rm -rf "${OUT:?}"
 echo "Built: $DMG   (version $VERSION)"
