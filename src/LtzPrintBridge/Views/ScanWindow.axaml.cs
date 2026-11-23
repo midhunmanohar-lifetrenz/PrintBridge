@@ -14,6 +14,7 @@ namespace LtzPrintBridge.Views;
 
 /// <summary>
 /// A small always-on-top strip (camera thumbnail + last value) that opens without taking the keyboard focus,
+/// has no buttons (drag to move, double-click to close, right-click for settings),
 /// so the web page field the user clicked stays active. Each code it reads is typed into that field,
 /// followed by Enter, Tab or nothing. It keeps scanning until closed, and closes itself after a minute with no scans.
 /// </summary>
@@ -115,7 +116,7 @@ public partial class ScanWindow : Window
         var cam = CameraPermission.Mac();
         if (cam is CameraPermission.State.Denied or CameraPermission.State.Restricted)
         {
-            Show("Camera blocked", Bad, "Allow camera", "Click ⋯ › Allow camera");
+            Show("Camera blocked", Bad, "Allow camera", "Right-click › Allow camera");
             return;
         }
         Show(cam == CameraPermission.State.NotAsked ? "Allow the camera when macOS asks" : "Starting camera…", Muted);
@@ -128,7 +129,7 @@ public partial class ScanWindow : Window
         {
             Log.Error("Camera could not start", e);
             Show("Camera could not start", Bad, "—", OperatingSystem.IsWindows()
-                ? "Settings › Privacy › Camera › Let desktop apps access" : "Click ⋯ › Allow camera");
+                ? "Settings › Privacy › Camera › Let desktop apps access" : "Right-click › Allow camera");
             return;
         }
         // No picture after a few seconds: usually the camera permission, or another app holding the camera.
@@ -138,7 +139,7 @@ public partial class ScanWindow : Window
             Log.Warn("Camera started but sent no picture in 5 s");
             var p = CameraPermission.Mac();
             Show(p == CameraPermission.State.Allowed ? "No picture from the camera" : "Camera not allowed", Bad, "—",
-                p == CameraPermission.State.Allowed ? "Close other apps using it, then reopen" : "Click ⋯ › Allow camera");
+                p == CameraPermission.State.Allowed ? "Close other apps using it, then reopen" : "Right-click › Allow camera");
         }));
     }
 
@@ -225,7 +226,7 @@ public partial class ScanWindow : Window
 
         if (!KeyTyper.CanType(prompt: true))
         {
-            Show("Not sent · allow typing", Warn, text, "Click ⋯ › Allow typing, then Type again");
+            Show("Not sent · allow typing", Warn, text, "Right-click › Allow typing, then Type again");
             return; // stays paused until "Type again"
         }
 
@@ -251,7 +252,7 @@ public partial class ScanWindow : Window
 
     // ---------- menu and buttons ----------
 
-    void OnMenu(object? s, RoutedEventArgs e)
+    void ShowMenu()
     {
         var menu = new MenuFlyout();
         menu.Items.Add(Group("After the value",
@@ -281,7 +282,11 @@ public partial class ScanWindow : Window
             menu.Items.Add(typing);
             menu.Items.Add(camera);
         }
-        menu.ShowAt(C<Button>("MenuButton"));
+        var close = new MenuItem { Header = "Stop scanner" };
+        close.Click += (_, _) => Close();
+        menu.Items.Add(new Separator());
+        menu.Items.Add(close);
+        menu.ShowAt(C<Border>("Shell"), showAtPointer: true);
     }
 
     static MenuItem Group(string header, params MenuItem[] items)
@@ -298,10 +303,19 @@ public partial class ScanWindow : Window
         return m;
     }
 
-    void OnDrag(object? s, PointerPressedEventArgs e)
-    {
-        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) BeginMoveDrag(e);
-    }
+    DateTime _lastPress;
 
-    void OnClose(object? s, RoutedEventArgs e) => Close();
+    /// <summary>Left: drag to move, double-click to close. Right: settings.</summary>
+    void OnPointerPressed(object? s, PointerPressedEventArgs e)
+    {
+        var props = e.GetCurrentPoint(this).Properties;
+        if (props.IsRightButtonPressed) { ShowMenu(); e.Handled = true; return; }
+        if (!props.IsLeftButtonPressed) return;
+        // Dragging the window can swallow the system's double-click count, so the time between presses is checked too.
+        var now = DateTime.UtcNow;
+        bool doubleClick = e.ClickCount >= 2 || now - _lastPress < TimeSpan.FromMilliseconds(450);
+        _lastPress = now;
+        if (doubleClick) { Close(); e.Handled = true; return; }
+        BeginMoveDrag(e);
+    }
 }

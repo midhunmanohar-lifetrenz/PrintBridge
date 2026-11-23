@@ -1,12 +1,13 @@
 <Window RequestedThemeVariant="Dark" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="LtzPrintBridge.Views.ScanWindow" Title="PrintBridge Scan" Width="300" Height="46"
+        x:Class="LtzPrintBridge.Views.ScanWindow" Title="PrintBridge Scan" Width="250" Height="46"
         CanResize="False" Topmost="True" ShowActivated="False" ShowInTaskbar="False"
         SystemDecorations="None" TransparencyLevelHint="Transparent" Background="Transparent"
         FontFamily="Inter, Segoe UI, sans-serif" FontSize="11">
-  <!-- A thin dark strip: camera thumbnail, status line, last value, close and settings. Drag anywhere to move it. -->
+  <!-- A thin dark strip: camera thumbnail, status line and last value. Drag to move, double-click to close,
+       right-click for settings. -->
   <Border x:Name="Shell" Background="#16202A" CornerRadius="10" Padding="4" BorderBrush="#2B3A46" BorderThickness="1"
-          PointerPressed="OnDrag">
-    <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
+          PointerPressed="OnPointerPressed" ToolTip.Tip="Double-click to close · right-click for settings">
+    <Grid ColumnDefinitions="50,*" ColumnSpacing="8">
       <Border Grid.Column="0" CornerRadius="7" ClipToBounds="True" Background="#0B1218" Width="50" Height="36">
         <Grid>
           <Image x:Name="Preview" Stretch="UniformToFill"/>
@@ -28,12 +29,6 @@
                    Text="—" TextTrimming="CharacterEllipsis"/>
       </StackPanel>
 
-      <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Spacing="0">
-        <Button x:Name="MenuButton" Content="⋯" Click="OnMenu" ToolTip.Tip="Settings" Width="22" Height="22" Padding="0" FontSize="12"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" Foreground="#93A4B1" CornerRadius="11"/>
-        <Button x:Name="CloseButton" Content="✕" Click="OnClose" ToolTip.Tip="Close" Width="22" Height="22" Padding="0" FontSize="10"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" Foreground="#93A4B1" CornerRadius="11"/>
-      </StackPanel>
     </Grid>
   </Border>
 </Window>

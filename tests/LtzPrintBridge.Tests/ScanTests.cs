@@ -146,7 +146,7 @@ public class ScanWindowTests
         var w = new LtzPrintBridge.Views.ScanWindow();
         Assert.False(w.ShowActivated);
         Assert.True(w.Topmost);
-        Assert.True(w.Width <= 320 && w.Height <= 50);
+        Assert.True(w.Width <= 260 && w.Height <= 50);
         Assert.NotNull(Avalonia.Controls.ControlExtensions.FindControl<Avalonia.Controls.Image>(w, "Preview"));
         Assert.NotNull(Avalonia.Controls.ControlExtensions.FindControl<Avalonia.Controls.TextBlock>(w, "Value"));
     }

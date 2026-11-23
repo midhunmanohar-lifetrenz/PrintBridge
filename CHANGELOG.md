@@ -2,9 +2,9 @@
 
 ## 1.3.0 (test build, branch scan-test)
 
-- New: **Scan into active field** in the tray menu. Opens a thin strip (300×46: camera thumbnail, last value,
-  batch and expiry, a settings menu and close) that stays on top in the bottom-right corner without taking the focus
-  from the web page; it can be dragged anywhere. Each barcode or QR code it reads is typed into the field that has the cursor,
+- New: **Start scanner** in the tray menu (reads **Stop scanner** while open). Opens a thin strip (250×46: camera
+  thumbnail, status with batch and expiry, last value) that stays on top in the bottom-right corner without taking the
+  focus from the web page. No buttons: drag to move, double-click to close, right-click for settings. Each barcode or QR code it reads is typed into the field that has the cursor,
   followed by Enter, Tab or nothing, like a USB scanner.
 - Medicine codes (GS1 DataMatrix, GS1-128, GS1 QR) are read into product code, batch, expiry and serial; expired
   stock is flagged in the window. The field receives the full code (bracketed or digits only) or the product code only.

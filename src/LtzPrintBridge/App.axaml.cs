@@ -63,7 +63,7 @@ public partial class App : Application
         try
         {
             var open = new NativeMenuItem("Open PrintBridge"); open.Click += (_, _) => ShowWindow();
-            var scan = new NativeMenuItem("Scan into active field"); scan.Click += (_, _) => ShowScan();
+            var scan = new NativeMenuItem("Start scanner"); scan.Click += (_, _) => ToggleScan(scan);
             var quit = new NativeMenuItem("Quit"); quit.Click += (_, _) => _vm!.Quit();
             _tray = new TrayIcon
             {
@@ -102,12 +102,16 @@ public partial class App : Application
         return new WindowIcon(AssetLoader.Open(new Uri("avares://PrintBridge/Assets/" + name)));
     }
 
-    /// <summary>Opens the scanner without taking the focus away from the web page; a second click brings the open one forward.</summary>
-    void ShowScan()
+    /// <summary>
+    /// Start scanner opens the scan strip without taking the focus away from the web page; while it is open the same
+    /// menu item reads Stop scanner. The strip also closes on a double-click or after a minute with no scans.
+    /// </summary>
+    void ToggleScan(NativeMenuItem item)
     {
-        if (_scan != null) { _scan.Topmost = false; _scan.Topmost = true; return; }
+        if (_scan != null) { _scan.Close(); return; }
         _scan = new ScanWindow();
-        _scan.Closed += (_, _) => _scan = null;
+        _scan.Closed += (_, _) => { _scan = null; item.Header = "Start scanner"; };
+        item.Header = "Stop scanner";
         _scan.Show();
     }
 
