@@ -32,6 +32,10 @@ public static class FrameImage
         int stride = (width * bpp / 8 + 3) & ~3;
         if (offset < 0 || offset + (long)stride * height > d.Length) return null;
 
+        // Windows sends 32-bit pixels as B,G,R,X. The Mac camera sends A,R,G,B, whose always-full alpha byte would be
+        // read as blue (a blue, odd-coloured picture). Tell them apart by which byte never changes.
+        bool argb = bpp == 32 && IsArgb(d, offset, stride, width, height);
+
         var bmp = new SKBitmap(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Opaque));
         var dest = new byte[width * 4];
         var ptr = bmp.GetPixels();
@@ -39,7 +43,14 @@ public static class FrameImage
         for (int y = 0; y < height; y++)
         {
             int src = offset + (topDown ? y : height - 1 - y) * stride;
-            if (bpp == 32)
+            if (argb)
+            {
+                for (int x = 0, s = src, t = 0; x < width; x++, s += 4, t += 4)
+                {
+                    dest[t] = d[s + 3]; dest[t + 1] = d[s + 2]; dest[t + 2] = d[s + 1]; dest[t + 3] = 255;
+                }
+            }
+            else if (bpp == 32)
             {
                 Buffer.BlockCopy(d, src, dest, 0, width * 4);
                 for (int x = 3; x < dest.Length; x += 4) dest[x] = 255;
@@ -54,6 +65,20 @@ public static class FrameImage
             Marshal.Copy(dest, 0, ptr + y * rowBytes, dest.Length);
         }
         return bmp;
+    }
+
+    /// <summary>True when the first byte of every sampled pixel is 255 (alpha first) while the last byte varies.</summary>
+    static bool IsArgb(byte[] d, int offset, int stride, int width, int height)
+    {
+        bool firstFull = true, lastFull = true;
+        for (int i = 0; i < 64; i++)
+        {
+            int y = (int)((long)height * (i % 8 * 2 + 1) / 16), x = (int)((long)width * (i / 8 * 2 + 1) / 16);
+            int p = offset + y * stride + x * 4;
+            if (d[p] != 255) firstFull = false;
+            if (d[p + 3] != 255) lastFull = false;
+        }
+        return firstFull && !lastFull;
     }
 
     /// <summary>A small JPEG of the frame for the preview, cropped to fill <paramref name="w"/>×<paramref name="h"/>.</summary>

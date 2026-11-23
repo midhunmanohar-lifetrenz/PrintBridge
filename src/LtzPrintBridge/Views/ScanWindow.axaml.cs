@@ -73,7 +73,7 @@ public partial class ScanWindow : Window
         if (screen == null) return;
         var area = screen.WorkingArea;
         double scale = screen.Scaling <= 0 ? 1 : screen.Scaling;
-        int w = (int)(Width * scale), h = (int)(Height * scale), margin = (int)(16 * scale);
+        int w = (int)(Width * scale), h = (int)(Height * scale), margin = (int)(12 * scale);
         Position = new PixelPoint(area.Right - w - margin, area.Bottom - h - margin);
     }
 
@@ -86,10 +86,11 @@ public partial class ScanWindow : Window
         {
             var v = C<TextBlock>("Value");
             v.Text = value;
-            v.FontSize = value.Length > 16 ? 12 : 16; // long medicine codes stay readable in the strip
+            v.FontSize = value.Length > 22 ? 11 : value.Length > 16 ? 12 : 14; // long medicine codes stay readable in the strip
+            ToolTip.SetTip(v, value);
         }
         var d = C<TextBlock>("Detail");
-        d.Text = detail ?? "";
+        d.Text = string.IsNullOrEmpty(detail) ? "" : "· " + detail;
         d.IsVisible = !string.IsNullOrEmpty(detail);
         d.Foreground = detailColor ?? Muted;
     }
@@ -162,7 +163,7 @@ public partial class ScanWindow : Window
                 }
                 if (bmp == null) return;
 
-                var thumb = FrameImage.Thumbnail(bmp, 192, 144);
+                var thumb = FrameImage.Thumbnail(bmp, 100, 72);
                 Dispatcher.UIThread.Post(() =>
                 {
                     if (_closed) return;

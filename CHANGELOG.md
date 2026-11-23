@@ -2,7 +2,7 @@
 
 ## 1.3.0 (test build, branch scan-test)
 
-- New: **Scan into active field** in the tray menu. Opens a small strip (300×84: camera thumbnail, last value,
+- New: **Scan into active field** in the tray menu. Opens a thin strip (300×46: camera thumbnail, last value,
   batch and expiry, a settings menu and close) that stays on top in the bottom-right corner without taking the focus
   from the web page; it can be dragged anywhere. Each barcode or QR code it reads is typed into the field that has the cursor,
   followed by Enter, Tab or nothing, like a USB scanner.

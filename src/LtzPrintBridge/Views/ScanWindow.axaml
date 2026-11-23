@@ -1,36 +1,38 @@
 <Window RequestedThemeVariant="Dark" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="LtzPrintBridge.Views.ScanWindow" Title="PrintBridge Scan" Width="300" Height="84"
+        x:Class="LtzPrintBridge.Views.ScanWindow" Title="PrintBridge Scan" Width="300" Height="46"
         CanResize="False" Topmost="True" ShowActivated="False" ShowInTaskbar="False"
         SystemDecorations="None" TransparencyLevelHint="Transparent" Background="Transparent"
-        FontFamily="Inter, Segoe UI, sans-serif" FontSize="12">
-  <!-- A small dark strip: camera thumbnail, the last value, and two buttons. Drag anywhere to move it. -->
-  <Border x:Name="Shell" Background="#16202A" CornerRadius="14" Padding="6" BorderBrush="#2B3A46" BorderThickness="1"
+        FontFamily="Inter, Segoe UI, sans-serif" FontSize="11">
+  <!-- A thin dark strip: camera thumbnail, status line, last value, close and settings. Drag anywhere to move it. -->
+  <Border x:Name="Shell" Background="#16202A" CornerRadius="10" Padding="4" BorderBrush="#2B3A46" BorderThickness="1"
           PointerPressed="OnDrag">
-    <Grid ColumnDefinitions="96,*,Auto" ColumnSpacing="10">
-      <Border Grid.Column="0" CornerRadius="10" ClipToBounds="True" Background="#0B1218" Width="96" Height="72">
+    <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
+      <Border Grid.Column="0" CornerRadius="7" ClipToBounds="True" Background="#0B1218" Width="50" Height="36">
         <Grid>
           <Image x:Name="Preview" Stretch="UniformToFill"/>
-          <Grid Margin="16,14">
-            <Border Width="10" Height="10" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="White" BorderThickness="2,2,0,0" CornerRadius="3,0,0,0"/>
-            <Border Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,2,2,0" CornerRadius="0,3,0,0"/>
-            <Border Width="10" Height="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" BorderBrush="White" BorderThickness="2,0,0,2" CornerRadius="0,0,0,3"/>
-            <Border Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" BorderBrush="White" BorderThickness="0,0,2,2" CornerRadius="0,0,3,0"/>
+          <Grid Margin="8,6">
+            <Border Width="6" Height="6" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="White" BorderThickness="1.5,1.5,0,0"/>
+            <Border Width="6" Height="6" HorizontalAlignment="Right" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,1.5,1.5,0"/>
+            <Border Width="6" Height="6" HorizontalAlignment="Left" VerticalAlignment="Bottom" BorderBrush="White" BorderThickness="1.5,0,0,1.5"/>
+            <Border Width="6" Height="6" HorizontalAlignment="Right" VerticalAlignment="Bottom" BorderBrush="White" BorderThickness="0,0,1.5,1.5"/>
           </Grid>
         </Grid>
       </Border>
 
-      <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-        <TextBlock x:Name="Status" Foreground="#93A4B1" FontSize="11" Text="Starting camera…" TextTrimming="CharacterEllipsis"/>
-        <TextBlock x:Name="Value" Foreground="White" FontFamily="Consolas, Menlo, monospace" FontSize="16" FontWeight="SemiBold"
-                   Text="—" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis"/>
-        <TextBlock x:Name="Detail" Foreground="#93A4B1" FontSize="11" TextTrimming="CharacterEllipsis" IsVisible="False"/>
+      <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="0">
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <TextBlock x:Name="Status" Foreground="#93A4B1" FontSize="10" Text="Starting camera…"/>
+          <TextBlock x:Name="Detail" Foreground="#93A4B1" FontSize="10" TextTrimming="CharacterEllipsis" IsVisible="False"/>
+        </StackPanel>
+        <TextBlock x:Name="Value" Foreground="White" FontFamily="Consolas, Menlo, monospace" FontSize="14" FontWeight="SemiBold"
+                   Text="—" TextTrimming="CharacterEllipsis"/>
       </StackPanel>
 
-      <StackPanel Grid.Column="2" VerticalAlignment="Top" Spacing="2">
-        <Button x:Name="CloseButton" Content="✕" Click="OnClose" ToolTip.Tip="Close" Width="26" Height="26" Padding="0"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" Foreground="#93A4B1" CornerRadius="13"/>
-        <Button x:Name="MenuButton" Content="⋯" Click="OnMenu" ToolTip.Tip="Settings" Width="26" Height="26" Padding="0"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" Foreground="#93A4B1" CornerRadius="13"/>
+      <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Spacing="0">
+        <Button x:Name="MenuButton" Content="⋯" Click="OnMenu" ToolTip.Tip="Settings" Width="22" Height="22" Padding="0" FontSize="12"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" Foreground="#93A4B1" CornerRadius="11"/>
+        <Button x:Name="CloseButton" Content="✕" Click="OnClose" ToolTip.Tip="Close" Width="22" Height="22" Padding="0" FontSize="10"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" Foreground="#93A4B1" CornerRadius="11"/>
       </StackPanel>
     </Grid>
   </Border>

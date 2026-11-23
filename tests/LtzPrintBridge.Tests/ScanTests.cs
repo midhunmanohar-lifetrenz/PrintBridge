@@ -146,7 +146,7 @@ public class ScanWindowTests
         var w = new LtzPrintBridge.Views.ScanWindow();
         Assert.False(w.ShowActivated);
         Assert.True(w.Topmost);
-        Assert.True(w.Width <= 320 && w.Height <= 100);
+        Assert.True(w.Width <= 320 && w.Height <= 50);
         Assert.NotNull(Avalonia.Controls.ControlExtensions.FindControl<Avalonia.Controls.Image>(w, "Preview"));
         Assert.NotNull(Avalonia.Controls.ControlExtensions.FindControl<Avalonia.Controls.TextBlock>(w, "Value"));
     }
@@ -155,6 +155,32 @@ public class ScanWindowTests
 public class FrameImageTests
 {
     /// <summary>FlashCap hands over uncompressed frames as BMP; both row orders and both pixel sizes must read.</summary>
+    /// <summary>The Mac camera sends A,R,G,B pixels; read as B,G,R,A they would turn blue.</summary>
+    [Fact]
+    public void Reads_mac_argb_frames_in_the_right_colours()
+    {
+        int w = 16, h = 16, stride = w * 4;
+        var d = new byte[54 + stride * h];
+        d[0] = (byte)'B'; d[1] = (byte)'M';
+        BitConverter.GetBytes(54).CopyTo(d, 10);
+        BitConverter.GetBytes(40).CopyTo(d, 14);
+        BitConverter.GetBytes(w).CopyTo(d, 18);
+        BitConverter.GetBytes(h).CopyTo(d, 22);
+        BitConverter.GetBytes((short)32).CopyTo(d, 28);
+        for (int i = 0; i < w * h; i++)
+        {
+            int p = 54 + i * 4;
+            d[p] = 255;                     // A
+            d[p + 1] = 220;                 // R  (a skin-like orange)
+            d[p + 2] = (byte)(120 + i % 7); // G
+            d[p + 3] = 60;                  // B
+        }
+        using var bmp = FrameImage.Decode(d)!;
+        var c = bmp.GetPixel(5, 5);
+        Assert.Equal(220, c.Red);
+        Assert.Equal(60, c.Blue);
+    }
+
     [Theory]
     [InlineData(24, false)]
     [InlineData(32, false)]
@@ -201,6 +227,7 @@ public class ScanWindowScreenshots
         {
             ("scan-sent.png", "Sent ✓", "8901234567890", null),
             ("scan-medicine.png", "Sent ✓", "(01)08901234567890(17)271231(10)AB12C", "Batch AB12C · Exp Dec 2027"),
+            ("scan-scanning.png", "Scanning…", "—", null),
         };
         foreach (var (file, status, value, detail) in shots)
         {
